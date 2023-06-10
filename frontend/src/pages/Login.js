@@ -1,17 +1,27 @@
 import styles from './Login.module.css'
-import Header from '../components/Header';
+import logo from '../assets/logo.png'
+import { useNavigate } from 'react-router-dom';
 
 function Login(){
+
+    const navigate = useNavigate();
     
     function handleLogin(){
 
     }
+
+    function handleCreateAccount(){
+      navigate("/createAccount");
+    }
+
+    function handlePasswordRecovery(){
+      navigate("/passwordRecovery")
+    }
     
     return (
-      <div>
-        <Header/>
+      <div className={styles.container}>
+        <img src={logo} className={styles.logo}/>
         <form className={styles.loginCard} onSubmit={handleLogin}>
-          <h2>Login</h2>
           <div className={styles.inputContainer}>
             <input
               type="text"
@@ -27,9 +37,11 @@ function Login(){
             />
           </div>
           <button type="submit" className={styles.loginButton}>
-            Login
+            Entrar
           </button>
         </form>
+        <a className={styles.link} onClick={handlePasswordRecovery}>Esqueci minha senha</a>
+        <p className={styles.text}>Não possui uma conta? <a className={styles.link} onClick={handleCreateAccount}>Clique aqui para se cadastrar!</a></p>
       </div>
     );
 }
