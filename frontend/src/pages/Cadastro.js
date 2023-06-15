@@ -23,7 +23,7 @@ function Cadastro(){
 
 
     function loginRoute(){
-      navigate("/login");
+      navigate("/logarUsuario");
     }
 
     function formHandler(event){
@@ -32,7 +32,7 @@ function Cadastro(){
       const idEndereco = Math.floor(1000000 * Math.random())
       
       axios
-        .post("/createAddress", {
+        .post("http://localhost:3333/createAddress", {
           id: idEndereco,
           logradouro: logradouroRef.current.value,
           bairro: bairroRef.current.value,
@@ -40,7 +40,7 @@ function Cadastro(){
         })
         .then((response) => {
           axios
-            .post("/createAccount", {
+            .post("http://localhost:3333/createAccount", {
               nome: nomeRef.current.value,
               email: emailRef.current.value,
               senha: senhaRef.current.value,

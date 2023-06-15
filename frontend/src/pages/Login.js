@@ -18,7 +18,7 @@ function Login(){
       const password = passwordRef.current.value;
       
       axios
-        .post("/authenticateUser", {
+        .post("http://localhost:3333/authenticateUser", {
           username: username,
           password: password,
         })

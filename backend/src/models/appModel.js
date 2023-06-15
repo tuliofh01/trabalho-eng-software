@@ -1,21 +1,23 @@
 const sqlite3 = require("sqlite3");
 const path = require("path");
 
-async function autenticarLogin(user, password) {
+function autenticarLogin(user, password) {
   const db = new sqlite3.Database('../assets/database.db');
 
-  let usersArray;
+  let usersArray = [];
 
-   db.all(`SELECT * FROM USUARIOS WHERE USERNAME = '${user}' 
-    AND PASSWORD = '${password}'`, (error, rows) => {
+   db.all(`SELECT * FROM USUARIOS`, (error, rows) => {
     if (error) {
       console.error(error);
     } else {
       usersArray = rows;
+      console.log(rows)
     }
   });
 
   db.close();
+
+  //console.log(usersArray)
 
   if (usersArray[0].length > 0) {
     return true;
@@ -24,7 +26,7 @@ async function autenticarLogin(user, password) {
   }
 }
 
-async function criarConta(accountData){
+function criarConta(accountData){
   const dbPath = path.resolve(__dirname, "../assets/database.db");
 
   const db = new sqlite3.Database(dbPath);
@@ -44,7 +46,7 @@ async function criarConta(accountData){
   db.close()
 }
 
-async function criarEndereco(accountData){
+function criarEndereco(accountData){
   const dbPath = path.resolve(__dirname, "../assets/database.db");
   
   const db = new sqlite3.Database(
