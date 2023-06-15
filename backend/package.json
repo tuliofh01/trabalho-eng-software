@@ -1,9 +1,8 @@
 {
   "name": "backend",
-  "proxy": "http://localhost:80",
   "version": "1.0.0",
-  "description": "Backend to DrSim application",
-  "main": "index.js",
+  "description": "",
+  "main": "./src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon ./src/server.js",
