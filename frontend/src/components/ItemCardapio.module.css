@@ -1,0 +1,40 @@
+.container{
+    height: 400px;
+    width: 500px;
+    background-color: #FCDBBD;
+    border-radius: 15px;
+    padding: 5px;
+}
+
+.image{
+    width: 200px;
+    height: auto;
+    margin: 5px auto;
+}
+
+.innerDiv{
+    display: flex;
+    flex-direction: column;
+}
+
+.description{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: medium;
+    color: black;
+    text-align: left;
+}
+
+.price {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: medium;
+    color: #B11C14;
+    text-align: left;
+}
+
+.button {
+    font-family: Arial, Helvetica, sans-serif;
+    clear: right;
+    float: right;
+    border-radius: 30px; 
+    background-color: #B11C14;   
+}

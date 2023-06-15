@@ -1,11 +1,43 @@
-.header{
+.container{
   display: flex;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   height: 120px; 
-  background-color: #270802; 
+  background-color: #4E1008; 
   z-index: 1000; 
-  border-bottom: 4px solid #E00004;
+}
+
+.innerDiv{
+  display: flex;
+  flex-direction: row;
+  float: right;
+  clear: right;
+  margin-left: auto;
+}
+
+.link{
+  padding: 5px;
+  margin: auto 5px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #FCDBBD;
+  cursor: pointer;
+  text-align: right;
+}
+
+.link:hover{
+  text-decoration: underline;
+}
+
+.logo{
+  float: right;
+  clear: right;
+}
+
+.profilePic{
+  height: 50px;
+  width: 50px;
+  margin-top: 35px;
+  margin-right: 10px;
 }

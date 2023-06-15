@@ -20,7 +20,7 @@ function verifyToken(req, res, next){
     });
 }
 
-router.post("/login", async (req, res) => {  
+router.post("/authenticateUser", async (req, res) => {  
     const username = req.body.username;
     
     const passwordBuffer = SHA256(req.body.password)
@@ -39,7 +39,33 @@ router.post("/login", async (req, res) => {
       res.status(401).json({"error": "unauthorized access"});
     }
 
-})
+});
+
+router.post("/createAccount", async (req, res) => {
+  const passwordBuffer = SHA256(req.body.password);
+  const password = passwordBuffer.toString("base64");
+
+  const data = {
+    cpf: accountData.cpf,
+    nome: accountData.nome, 
+    telefone: accountData.telefone,
+    email: accountData.email, 
+    senha: password, 
+    endereco: accountData.endereco
+  }
+
+  const authStatus = await appModel.criarConta(data);
+
+  if (authStatus === true) {
+    const payload = { username: data.email };
+    const key = process.env.SECRET_KEY_TOKEN;
+    const options = { expiresIn: "1h" };
+    const token = jwt.sign(payload, key, options);
+    res.status(200).send(token);
+  } else {
+    res.status(401).json({ error: "unable to create account" });
+  }
+});
 
 router.post("/buscarMedico", verifyToken, async (req, res) => {
   const nomeMedico = await appModel.buscarMedico(req.username);

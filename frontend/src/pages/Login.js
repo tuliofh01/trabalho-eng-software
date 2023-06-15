@@ -1,21 +1,44 @@
 import styles from './Login.module.css'
 import logo from '../assets/logo.png'
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useRef } from 'react';
 
 function Login(){
 
     const navigate = useNavigate();
     
-    function handleLogin(){
+    const usernameRef = useRef();
+    const passwordRef = useRef();
+    
+    function handleLogin(event){
+      event.preventDefault();
+      
+      const username = usernameRef.current.value;
+      const password = passwordRef.current.value;
+      
+      axios
+        .post("/authenticateUser", {
+          username: username,
+          password: password,
+        })
+        .then((response) => {
+          localStorage.setItem("token", response.data);
+          navigate("/");
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("Usuário ou senha inválidos!");
+        });
 
     }
 
     function handleCreateAccount(){
-      navigate("/createAccount");
+      navigate("/criarConta");
     }
 
     function handlePasswordRecovery(){
-      navigate("/passwordRecovery")
+      navigate("/recuperarSenha")
     }
     
     return (
@@ -27,6 +50,7 @@ function Login(){
               type="text"
               placeholder="Login"
               className={styles.inputField}
+              ref={usernameRef}
             />
           </div>
           <div className={styles.inputContainer}>
@@ -34,6 +58,7 @@ function Login(){
               type="password"
               placeholder="Senha"
               className={styles.inputField}
+              ref={passwordRef}
             />
           </div>
           <button type="submit" className={styles.loginButton}>

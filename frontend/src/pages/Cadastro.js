@@ -11,6 +11,11 @@ function Cadastro(){
       navigate("/login");
     }
 
+    function formHandler(event){
+      event.preventDefault();
+      
+    }
+
     return (
       <div className={styles.container}>
         <img src={logo} className={styles.logo} />
