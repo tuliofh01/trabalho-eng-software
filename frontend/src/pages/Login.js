@@ -24,7 +24,7 @@ function Login(){
         })
         .then((response) => {
           localStorage.setItem("token", response.data);
-          navigate("/");
+          navigate("/cardapio");
         })
         .catch((error) => {
           console.log(error);
