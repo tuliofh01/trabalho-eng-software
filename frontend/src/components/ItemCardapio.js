@@ -25,10 +25,10 @@ function ItemCardapio(props){
         const itensPedido = localStorage.getItem("itensPedido");
         if (itensPedido) {
           const oldItems = itensPedido;
-          const newItems = oldItems + "," + props.description;
+          const newItems = oldItems + ";" + props.description + ' - R$' + amount;
           localStorage.setItem("itensPedido", newItems);
         } else {
-          localStorage.setItem("itensPedido", props.description + ',');
+          localStorage.setItem("itensPedido", props.description + ' - R$' + amount);
         }
       }
     }

@@ -63,4 +63,9 @@ router.post("/createAddress", async (req, res) => {
   res.status(200).send("OK!");
 });
 
+router.post("/registerOrder", verifyToken, (req, res) => {
+
+
+});
+
 module.exports = router;

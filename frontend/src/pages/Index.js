@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import ContainerCardapio from '../components/ContainerCardapio';
 import ItemCardapio from '../components/ItemCardapio'
 import Header from '../components/Header'
@@ -19,19 +19,12 @@ import tomateSecoLogo from "../assets/pizzas/tomateSeco.png";
 import comboLogo from "../assets/combos/combo.png"
 
 function Index(){
-    
-    const [combos, setCombos] = useState();
-    const [pizzas, setPizzas] = useState();
-    const [bebidas, setBebidas] = useState();
-
     const navigate = useNavigate();
 
     useEffect(() => {
         if (!localStorage.getItem("token")) {
           navigate("/");
         }
-
-
     }, []);
     
     return (
