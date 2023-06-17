@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "proxy": "http://loccalhost:3333/",
+  "proxy": "http://localhost:3333/",
   "description": "",
   "main": "./src/server.js",
   "scripts": {

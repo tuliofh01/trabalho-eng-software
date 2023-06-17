@@ -25,7 +25,6 @@ router.post("/authenticateUser", async (req, res) => {
     const passwordBuffer = SHA256(req.body.password)
     const password = passwordBuffer.toString("base64")
     const authStatus = appModel.autenticarLogin(username, password);
-    console.log(authStatus)
     if (authStatus === true) {
         const payload = { username: req.body.username };
         const key = process.env.SECRET_KEY_TOKEN;

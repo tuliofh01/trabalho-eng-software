@@ -10,6 +10,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Login/>} />
+          <Route path='/cardapio' element={<Index/>}/>
           <Route path="/criarConta" element={<Cadastro/>} />
         </Routes>
       </Router>
