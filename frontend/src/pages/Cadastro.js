@@ -23,7 +23,7 @@ function Cadastro(){
 
 
     function loginRoute(){
-      navigate("/login");
+      navigate("/logarUsuario");
     }
 
     function formHandler(event){
@@ -31,6 +31,7 @@ function Cadastro(){
       
       const idEndereco = Math.floor(1000000 * Math.random())
       
+      //TODO: usar async/await para evitar problema de sincronismo
       axios
         .post("/createAddress", {
           id: idEndereco,
