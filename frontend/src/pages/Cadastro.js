@@ -33,7 +33,7 @@ function Cadastro(){
       
       //TODO: usar async/await para evitar problema de sincronismo
       axios
-        .post("/createAddress", {
+        .post("http://localhost:3333/createAddress", {
           id: idEndereco,
           logradouro: logradouroRef.current.value,
           bairro: bairroRef.current.value,
@@ -41,7 +41,7 @@ function Cadastro(){
         })
         .then((response) => {
           axios
-            .post("/createAccount", {
+            .post("http://localhost:3333/createAccount", {
               nome: nomeRef.current.value,
               email: emailRef.current.value,
               senha: senhaRef.current.value,

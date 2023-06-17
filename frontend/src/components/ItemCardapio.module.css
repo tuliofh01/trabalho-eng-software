@@ -1,20 +1,19 @@
 .container{
-    height: 400px;
-    width: 500px;
+    height: 250px;
+    width: 300px;
     background-color: #FCDBBD;
     border-radius: 15px;
     padding: 5px;
+    display: flex;
+    flex-direction: column;
+    margin: 5px 5px;
+    cursor: pointer;
 }
 
 .image{
-    width: 200px;
-    height: auto;
+    width: auto;
+    height: 150px;
     margin: 5px auto;
-}
-
-.innerDiv{
-    display: flex;
-    flex-direction: column;
 }
 
 .description{
@@ -29,12 +28,4 @@
     font-size: medium;
     color: #B11C14;
     text-align: left;
-}
-
-.button {
-    font-family: Arial, Helvetica, sans-serif;
-    clear: right;
-    float: right;
-    border-radius: 30px; 
-    background-color: #B11C14;   
 }

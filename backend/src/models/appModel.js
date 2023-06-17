@@ -1,38 +1,22 @@
-const sqlite3 = require("sqlite3");
+const sqlite3 = require("sqlite3").verbose();
+const Database = require("better-sqlite3");
 const path = require("path");
 
-async function autenticarLogin(user, password) {
-  const db = new sqlite3.Database('../assets/database.db');
-
-  let usersArray;
-
-   db.all(`SELECT * FROM USUARIOS WHERE USERNAME = '${user}' 
-    AND PASSWORD = '${password}'`, (error, rows) => {
-    if (error) {
-      console.error(error);
-    } else {
-      usersArray = rows;
-    }
-  });
-
+function autenticarLogin(user, password) {
+  const dbPath = path.resolve(__dirname, "../assets/database.db");
+  const db = new Database(dbPath);
+  const query = `SELECT * FROM USUARIO WHERE EMAIL = '${user}' AND SENHA = '${password}'`;
+  const rows = db.prepare(query).all();
   db.close();
-
-  if (usersArray[0].length > 0) {
-    return true;
-  } else {
-    return false;
-  }
+  return (rows.length > 0)
 }
 
-async function criarConta(accountData){
+function criarConta(accountData){
   const dbPath = path.resolve(__dirname, "../assets/database.db");
-
   const db = new sqlite3.Database(dbPath);
-
   const query = "INSERT INTO USUARIO (CPF, NOME, TELEFONE, EMAIL, SENHA, ENDERECO) VALUES (?, ?, ?, ?, ?, ?)";
   const values = [accountData.cpf, accountData.nome, accountData.telefone,
     accountData.email, accountData.senha, accountData.endereco];
-
   db.run(query, values, function (error) {
     if (error) {
       console.error(error);
@@ -40,20 +24,16 @@ async function criarConta(accountData){
       console.log(`New USER inserted: ${accountData.cpf}`);
     }
   });
-
   db.close()
 }
 
-async function criarEndereco(accountData){
+function criarEndereco(accountData){
   const dbPath = path.resolve(__dirname, "../assets/database.db");
-  
   const db = new sqlite3.Database(
     dbPath
   );
-
   const query = "INSERT INTO ENDERECO (ID, LOGRADOURO, BAIRRO, CEP) VALUES (?, ?, ?, ?)";
   const values = [accountData.id, accountData.logradouro, accountData.bairro, accountData.cep];
-
   db.run(query, values, function (error) {
     if (error) {
       console.error(error);
@@ -61,7 +41,6 @@ async function criarEndereco(accountData){
       console.log(`New ADDRESS inserted: ${accountData.id}`);
     }
   });
-
   db.close()
 }
 

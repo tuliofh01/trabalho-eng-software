@@ -18,13 +18,13 @@ function Login(){
       const password = passwordRef.current.value;
       
       axios
-        .post("/authenticateUser", {
+        .post("http://localhost:3333/authenticateUser", {
           username: username,
           password: password,
         })
         .then((response) => {
           localStorage.setItem("token", response.data);
-          navigate("/");
+          navigate("/cardapio");
         })
         .catch((error) => {
           console.log(error);

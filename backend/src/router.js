@@ -22,12 +22,9 @@ function verifyToken(req, res, next){
 
 router.post("/authenticateUser", async (req, res) => {  
     const username = req.body.username;
-    
     const passwordBuffer = SHA256(req.body.password)
     const password = passwordBuffer.toString("base64")
-
-    const authStatus = await appModel.autenticarLogin(username, password);
-
+    const authStatus = appModel.autenticarLogin(username, password);
     if (authStatus === true) {
         const payload = { username: req.body.username };
         const key = process.env.SECRET_KEY_TOKEN;
@@ -38,13 +35,11 @@ router.post("/authenticateUser", async (req, res) => {
     else {
       res.status(401).json({"error": "unauthorized access"});
     }
-
 });
 
 router.post("/createAccount", async (req, res) => {
   const passwordBuffer = SHA256(req.body.senha);
   const password = passwordBuffer.toString("base64");
-
   const data = {
     cpf: req.body.cpf,
     nome: req.body.nome,
@@ -53,18 +48,8 @@ router.post("/createAccount", async (req, res) => {
     senha: password,
     endereco: req.body.endereco,
   };
-
-  const authStatus = await appModel.criarConta(data);
-
-  if (authStatus === true) {
-    const payload = { username: data.email };
-    const key = process.env.SECRET_KEY_TOKEN;
-    const options = { expiresIn: "1h" };
-    const token = jwt.sign(payload, key, options);
-    res.status(200).send(token);
-  } else {
-    res.status(401).send("ERROR!");
-  }
+  appModel.criarConta(data);
+  res.status(200).send("OK!");
 });
 
 router.post("/createAddress", async (req, res) => {
@@ -76,6 +61,11 @@ router.post("/createAddress", async (req, res) => {
   };
   appModel.criarEndereco(data);
   res.status(200).send("OK!");
+});
+
+router.post("/registerOrder", verifyToken, (req, res) => {
+
+
 });
 
 module.exports = router;
