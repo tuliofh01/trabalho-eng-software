@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import ContainerCardapio from '../components/ContainerCardapio';
 import ItemCardapio from '../components/ItemCardapio'
 import Header from '../components/Header'
-import styles from './Index.module.css'
+import styles from './Cardapio.module.css'
 import { useNavigate } from 'react-router-dom';
 
 import cocaLogo from '../assets/bebidas/coca.png'

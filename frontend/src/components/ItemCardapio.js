@@ -1,43 +1,32 @@
 import styles from './ItemCardapio.module.css'
+import { useState } from 'react';
+import ModalPizzaComum from './ModalPizzaComum';
 
 function ItemCardapio(props){
 
-    function itemHandler(){
-      // Sets total purchase price
-      const price = Number(props.price.split(" ")[1])
-      let userInput;
-      do {
-        userInput = prompt("Quantos itens você deseja? (Entre com um número)");
-      } while (isNaN(userInput));
-      const amount = parseFloat(userInput) * price;
-      if (!isNaN(amount)){
-        alert(`R$ ${amount} adicionados ao carrinho.`);
-        const totalPedido = localStorage.getItem("totalPedido");
-        if (totalPedido) {
-          const oldPrice = totalPedido;
-          const newPrice = Number(oldPrice) + Number(amount);
-          localStorage.setItem("totalPedido", newPrice);
-        } else {
-          localStorage.setItem("totalPedido", amount);
-        }
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-        // Sets purchase items
-        const itensPedido = localStorage.getItem("itensPedido");
-        if (itensPedido) {
-          const oldItems = itensPedido;
-          const newItems = oldItems + ";" + props.description + ' - R$' + amount;
-          localStorage.setItem("itensPedido", newItems);
-        } else {
-          localStorage.setItem("itensPedido", props.description + ' - R$' + amount);
-        }
-      }
-    }
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
     return (
-      <div className={styles.container} onClick={itemHandler}>
-        <img className={styles.image} src={props.image} />
+      <div className={styles.container}>
+        <img className={styles.image} src={props.image} onClick={openModal}/>
         <p className={styles.description}>{props.description}</p>
         <p className={styles.price}>{props.price}</p>
+        {isModalOpen && (
+          <ModalPizzaComum
+            image={props.image}
+            description={props.description}
+            price={props.price}
+            onClose={closeModal}
+          />
+        )}
       </div>
     );
 }

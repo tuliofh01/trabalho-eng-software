@@ -14,9 +14,9 @@ function autenticarLogin(user, password) {
 function criarConta(accountData){
   const dbPath = path.resolve(__dirname, "../assets/database.db");
   const db = new sqlite3.Database(dbPath);
-  const query = "INSERT INTO USUARIO (CPF, NOME, TELEFONE, EMAIL, SENHA, ENDERECO) VALUES (?, ?, ?, ?, ?, ?)";
+  const query = "INSERT INTO USUARIO (CPF, NOME, TELEFONE, EMAIL, SENHA, IDENDERECO) VALUES (?, ?, ?, ?, ?, ?)";
   const values = [accountData.cpf, accountData.nome, accountData.telefone,
-    accountData.email, accountData.senha, accountData.endereco];
+    accountData.email, accountData.senha, accountData.endereco["ID"]];
   db.run(query, values, function (error) {
     if (error) {
       console.error(error);
@@ -28,18 +28,20 @@ function criarConta(accountData){
 }
 
 function criarEndereco(addressData){
+  // Get bairro ID
   const dbPath = path.resolve(__dirname, "../assets/database.db");
-  let db = new sqlite3.Database(
-    dbPath
-  );
-  
+  let db = new Database(dbPath);
+  let query = `SELECT ID FROM BAIRRO WHERE NOME = '${addressData.bairro}'`;
+  let rows = db.prepare(query).all();
+  db.close();
+  const idBairro = rows[0]["ID"]
+  console.log(idBairro)
+
   // Inserts address
-  let query = "INSERT INTO ENDERECO (LOGRADOURO, BAIRRO, CEP) VALUES (?, ?, ?)";
-  const values = [
-    addressData.logradouro,
-    addressData.bairro,
-    addressData.cep,
-  ];
+  db = new sqlite3.Database(dbPath);
+  query =
+    "INSERT INTO ENDERECO (LOGRADOURO, IDBAIRRO, CEP) VALUES (?, ?, ?)";
+  const values = [addressData.logradouro, idBairro, addressData.cep];
   db.run(query, values, function (error) {
     if (error) {
       console.error(error);
@@ -47,15 +49,14 @@ function criarEndereco(addressData){
       console.log(`New ADDRESS inserted: ${addressData.logradouro}`);
     }
   });
-  db.close()
+  db.close();
 
   // Gets address id
   db = new Database(dbPath);
-  query = `SELECT * FROM ENDERECO WHERE LOGRADOURO = '${addressData.logradouro}' 
-    AND BAIRRO = '${addressData.bairro}' AND CEP ='${addressData.cep}'`;
-  const rows = db.prepare(query).all();
-  console.log(rows[0]["ID"]);
-  return rows[0]["ID"];
+  query = `SELECT ID FROM ENDERECO WHERE LOGRADOURO = '${addressData.logradouro}' 
+    AND IDBAIRRO = '${idBairro}' AND CEP ='${addressData.cep}'`;
+  rows = db.prepare(query).all();
+  return rows[0];
 }
 
 
@@ -65,6 +66,7 @@ function getBairros(){
   const query = `SELECT * FROM BAIRRO`;
   const rows = db.prepare(query).all();
   const nomes = rows.map(obj => obj.NOME);
+  console.log(nomes)
   return nomes;
 }
 
