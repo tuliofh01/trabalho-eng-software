@@ -58,8 +58,20 @@ function criarEndereco(addressData){
   return rows[0]["ID"];
 }
 
+
+function getBairros(){
+  const dbPath = path.resolve(__dirname, "../assets/database.db");
+  const db = new Database(dbPath);
+  const query = `SELECT * FROM BAIRRO`;
+  const rows = db.prepare(query).all();
+  const nomes = rows.map(obj => obj.NOME);
+  return nomes;
+}
+
+
 module.exports = {
   criarConta: criarConta,
   criarEndereco: criarEndereco,
   autenticarLogin: autenticarLogin,
+  getBairros: getBairros
 };

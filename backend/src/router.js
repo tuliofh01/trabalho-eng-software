@@ -67,4 +67,10 @@ router.post("/registerOrder", verifyToken, (req, res) => {
 
 });
 
+
+router.get("/getNeighborhoods", (req, res) => {
+  const bairros = appModel.getBairros();
+  res.status(200).json(bairros)
+});
+
 module.exports = router;
