@@ -21,6 +21,8 @@ import comboLogo from "../assets/combos/combo.png"
 function Index(){
     const navigate = useNavigate();
 
+    
+
     useEffect(() => {
         if (!localStorage.getItem("token")) {
           navigate("/");
