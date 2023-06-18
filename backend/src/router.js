@@ -54,18 +54,23 @@ router.post("/createAccount", async (req, res) => {
 
 router.post("/createAddress", async (req, res) => {
   const data = {
-    id: req.body.id,
     logradouro: req.body.logradouro,
     bairro: req.body.bairro,
     cep: req.body.cep
   };
-  appModel.criarEndereco(data);
-  res.status(200).send("OK!");
+  const addressId = appModel.criarEndereco(data);
+  res.status(200).send(addressId);
 });
 
 router.post("/registerOrder", verifyToken, (req, res) => {
 
 
+});
+
+
+router.get("/getNeighborhoods", (req, res) => {
+  const bairros = appModel.getBairros();
+  res.status(200).json(bairros)
 });
 
 module.exports = router;
