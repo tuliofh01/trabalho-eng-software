@@ -68,6 +68,69 @@ function getBairros(){
   return nomes;
 }
 
+function getSaboresPizza()
+{
+  const dbPath = path.resolve(__dirname, "../assets/database.db");
+  const db = new Database(dbPath);
+  const query = `SELECT * FROM SABOR_PIZZA`;
+  const rows = db.prepare(query).all();
+  const nomes = rows.map(obj => obj.NOME);
+  return nomes;
+}
+
+function getCardapio()
+{
+  const dbPath = path.resolve(__dirname, "../assets/database.db");
+  const db = new Database(dbPath);
+
+  const query = `SELECT * FROM ITEMCARDAPIO`;
+  let rows = db.prepare(query).all();
+
+  if (rows.length <= 0) {
+    popularItemCardapio();
+    rows = db.prepare(query).all();
+  }
+
+  console.log(rows);
+  return rows;
+}
+
+function popularItemCardapio()
+{
+  const dbPath = path.resolve(__dirname, "../assets/database.db");
+  const db = new Database(dbPath);
+
+  const querySabores = `SELECT * FROM SABOR_PIZZA`;
+  const rowsSabores = db.prepare(querySabores).all();
+  
+  for (let row in rowsSabores)
+  {
+    let counter = 1;
+    let queryPizzas = `insert into ITEMCARDAPIO (DESCRICAO, VALOR, TIPO, IDSABOR1)
+    values (?, ?, ?, ?)`;
+
+    //random number between 20 and 100
+    const valor = (Math.random() * (100 - 20) + 20).toFixed(2);
+    const values = [(`Pizza de `+row.nome), valor, 'Pizza', row.ID];
+
+    db.run(queryPizzas, values, function (error) {
+      if (error) console.error(error);
+    });
+
+    let resultQuery = `SELECT * FROM ITEMCARDAPIO WHERE ID = ${counter}`;
+    console.log(`New ITEMCARDAPIO inserted: `+db.prepare(resultQuery).all());
+    counter++;
+  }
+
+  const queryBebidas = `insert into ITEMCARDAPIO (DESCRICAO, VALOR, TIPO)
+  values ('Coca-cola', 10, 'Bebida'), ('Guaraná', 8, 'Bebida'), ('Água mineral', 5, 'Bebida')`;
+
+  db.run(queryBebidas, function(error){
+    if (error) console.error(error);
+  });
+    
+}
+
 
 module.exports = {
   criarConta: criarConta,

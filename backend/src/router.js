@@ -73,4 +73,15 @@ router.get("/getNeighborhoods", (req, res) => {
   res.status(200).json(bairros)
 });
 
+router.get("/getFlavors", (req, res) =>
+{
+  const sabores = appModel.getSaboresPizza();
+  res.status(200).json(sabores);
+});
+
+router.get("/getMenuItems", (req, res) => {
+  const itensCardapio = appModel.getCardapio();
+  res.status(200).json(itensCardapio);
+});
+
 module.exports = router;
