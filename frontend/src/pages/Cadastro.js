@@ -26,28 +26,25 @@ function Cadastro(){
       navigate("/logarUsuario");
     }
 
-    function formHandler(event){
+    async function formHandler(event){
       event.preventDefault();
-      
-      const idEndereco = Math.floor(1000000 * Math.random())
-      
+
       //TODO: usar async/await para evitar problema de sincronismo
-      axios
+      await axios
         .post("http://localhost:3333/createAddress", {
-          id: idEndereco,
           logradouro: logradouroRef.current.value,
           bairro: bairroRef.current.value,
           cep: cepRef.current.value,
         })
-        .then((response) => {
-          axios
+        .then(async (response) => {
+          await axios
             .post("http://localhost:3333/createAccount", {
               nome: nomeRef.current.value,
               email: emailRef.current.value,
               senha: senhaRef.current.value,
               telefone: telefoneRef.current.value,
               cpf: cpfRef.current.value,
-              endereco: idEndereco,
+              endereco: response.data,
             })
             .then(() => {
               alert("Conta registrada com sucesso!");

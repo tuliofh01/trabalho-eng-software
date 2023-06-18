@@ -27,21 +27,35 @@ function criarConta(accountData){
   db.close()
 }
 
-function criarEndereco(accountData){
+function criarEndereco(addressData){
   const dbPath = path.resolve(__dirname, "../assets/database.db");
-  const db = new sqlite3.Database(
+  let db = new sqlite3.Database(
     dbPath
   );
-  const query = "INSERT INTO ENDERECO (ID, LOGRADOURO, BAIRRO, CEP) VALUES (?, ?, ?, ?)";
-  const values = [accountData.id, accountData.logradouro, accountData.bairro, accountData.cep];
+  
+  // Inserts address
+  let query = "INSERT INTO ENDERECO (LOGRADOURO, BAIRRO, CEP) VALUES (?, ?, ?)";
+  const values = [
+    addressData.logradouro,
+    addressData.bairro,
+    addressData.cep,
+  ];
   db.run(query, values, function (error) {
     if (error) {
       console.error(error);
     } else {
-      console.log(`New ADDRESS inserted: ${accountData.id}`);
+      console.log(`New ADDRESS inserted: ${addressData.logradouro}`);
     }
   });
   db.close()
+
+  // Gets address id
+  db = new Database(dbPath);
+  query = `SELECT * FROM ENDERECO WHERE LOGRADOURO = '${addressData.logradouro}' 
+    AND BAIRRO = '${addressData.bairro}' AND CEP ='${addressData.cep}'`;
+  const rows = db.prepare(query).all();
+  console.log(rows[0]["ID"]);
+  return rows[0]["ID"];
 }
 
 module.exports = {
