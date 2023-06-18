@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Index from './pages/Index';
+import Cardapio from './pages/Cardapio'
 import Login from './pages/Login';
 import Cadastro from './pages/Cadastro';
 import "./App.css";
@@ -12,7 +12,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Login/>} />
           <Route path="/carrinho" element={<Carrinho/>} />
-          <Route path='/cardapio' element={<Index/>}/>
+          <Route path='/cardapio' element={<Cardapio/>}/>
           <Route path="/criarConta" element={<Cadastro/>} />
         </Routes>
       </Router>
