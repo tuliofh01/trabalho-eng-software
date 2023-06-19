@@ -73,4 +73,19 @@ router.get("/getNeighborhoods", (req, res) => {
   res.status(200).json(bairros)
 });
 
+router.post("/getProfileData", verifyToken, (req, res) => {
+  const dados = appModel.getDadosPerfil(req.username);
+  res.status(200).json(dados);
+});
+
+router.post("/getAddressData", (req, res) => {
+  const dados = appModel.getEndereco(req.body.id);
+  res.status(200).json(dados);
+})
+
+router.post("/getNeighborhoodData", (req, res) => {
+  const dados = appModel.getBairro(req.body.id);
+  res.status(200).json(dados);
+});
+
 module.exports = router;

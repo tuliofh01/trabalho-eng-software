@@ -9,12 +9,20 @@ function Header() {
   
   return (
     <header className={styles.container}>
-      <img className={styles.logo} src={logo}/>
+      <img className={styles.logo} src={logo} />
       <div className={styles.innerDiv}>
-        <p className={styles.link} onClick={() => navigate("/cardapio")}>Menu</p>
+        <p className={styles.link} onClick={() => navigate("/cardapio")}>
+          Menu
+        </p>
         <p className={styles.link}>Meus pedidos</p>
-        <p className={styles.link} onClick={() => navigate("/carrinho")}>Carrinho</p>
-        <img className={styles.profilePic} src={profilePic}/>
+        <p className={styles.link} onClick={() => navigate("/carrinho")}>
+          Carrinho
+        </p>
+        <img
+          className={styles.profilePic}
+          src={profilePic}
+          onClick={() => navigate("/perfil")}
+        />
       </div>
     </header>
   );

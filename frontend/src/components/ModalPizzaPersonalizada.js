@@ -3,6 +3,8 @@ import "./ModalPizzaComum.css";
 
 function ModalPizzaPersonalizada(props) {
   const quantidadeRef = useRef();
+  const sabor1Ref = useRef();
+  const sabor2Ref = useRef();
 
   const [isOpen, setIsOpen] = useState(true);
   function closeModal() {
@@ -21,6 +23,8 @@ function ModalPizzaPersonalizada(props) {
         <p className="modalText">
           {props.description} - {props.price}
         </p>
+        <input ref={sabor1Ref} placeholder="Sabor 1" />
+        <input ref={sabor2Ref} placeholder="Sabor 2" />
         <input
           ref={quantidadeRef}
           type="number"
@@ -38,4 +42,4 @@ function ModalPizzaPersonalizada(props) {
   );
 }
 
-export default ModalPizzaComum;
+export default ModalPizzaPersonalizada;
