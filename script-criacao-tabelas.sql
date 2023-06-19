@@ -32,7 +32,7 @@ create table USUARIO (
 		ON UPDATE NO ACTION
 );
 
-create table PEDIDOS (
+create table PEDIDO (
 	ID integer primary key autoincrement,
 	CPF text,
 	DESCRICAO text,
@@ -45,19 +45,19 @@ create table PEDIDOS (
 		ON UPDATE NO ACTION
 );
 
-create table SABOR (
+create table SABOR_PIZZA (
 	ID integer primary key autoincrement,
 	DESCRICAO text
 );
 
-insert into SABOR (DESCRICAO) values ('Cheddar'), ('Frango'), ('Milho'), ('Portuguesa'), ('Quatro Queijos'), ('Tomate Seco'), ('Pepperoni'), ('Calabresa'), ('Frango com Catupiry'), ('Carne seca');
+insert into SABOR_PIZZA (DESCRICAO) values ('Cheddar'), ('Frango'), ('Milho'), ('Portuguesa'), ('Quatro Queijos'), ('Tomate Seco'), ('Pepperoni'), ('Calabresa'), ('Frango com Catupiry'), ('Carne seca');
 
 create table ITEMCARDAPIO (
 	ID integer primary key autoincrement,
 	DESCRICAO text,
 	VALOR numeric,
 	IMAGEM_PATH text,
-	TIPO integer,
+	TIPO text,
 	IDSABOR1 integer,
 	IDSABOR2 integer,
 	
@@ -72,5 +72,22 @@ create table ITEMCARDAPIO (
 		ON UPDATE NO ACTION
 );
 
-commit;
+insert into ITEMCARDAPIO (DESCRICAO, VALOR, TIPO, IDSABOR1)
+values ('Pizza teste', 90.2, 'Pizza', 1);
+
+create table ITEMPEDIDO (
+	IDPEDIDO integer,
+	IDITEM integer,
+	QUANTIDADE integer,
+	
+	foreign key (IDPEDIDO)
+	references PEDIDO (ID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+		
+	foreign key (IDITEM)
+	references ITEM_CARDAPIO(ID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+)
 

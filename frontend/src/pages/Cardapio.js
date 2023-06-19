@@ -1,30 +1,56 @@
-import { useEffect } from 'react';
-import ContainerCardapio from '../components/ContainerCardapio';
-import ItemCardapio from '../components/ItemCardapio'
-import Header from '../components/Header'
-import styles from './Cardapio.module.css'
+import axios from 'axios';
+import { useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
+import ContainerCardapio from '../components/ContainerCardapio';
+import Header from '../components/Header';
+import ItemCardapio from '../components/ItemCardapio';
+import styles from './Cardapio.module.css';
 
-import cocaLogo from '../assets/bebidas/coca.png'
-import guaranaLogo from '../assets/bebidas/guarana.png'
-import aguaLogo from '../assets/bebidas/agua.png'
+import aguaLogo from '../assets/bebidas/agua.png';
+import cocaLogo from '../assets/bebidas/coca.png';
+import guaranaLogo from '../assets/bebidas/guarana.png';
 
-import cheddarLogo from '../assets/pizzas/cheddar.png'
+import cheddarLogo from '../assets/pizzas/cheddar.png';
 import frangoLogo from "../assets/pizzas/frango.png";
 import milhoLogo from "../assets/pizzas/milho.png";
 import portuguesaLogo from "../assets/pizzas/portuguesa.png";
 import quatroQueijosLogo from "../assets/pizzas/quatroQueijos.png";
 import tomateSecoLogo from "../assets/pizzas/tomateSeco.png";
 
-import comboLogo from "../assets/combos/combo.png"
+import comboLogo from "../assets/combos/combo.png";
 
 function Index(){
+
+    const [itensPizza, setItensPizza] = useState([]);
+    const [itensBebida, setItensBebida] = useState([]);
+    const [itensCombo, setItensCombo] = useState([]);
+    
     const navigate = useNavigate();
 
     useEffect(() => {
         if (!localStorage.getItem("token")) {
           navigate("/");
         }
+
+        axios.get("/getCardapio").then((response) =>
+        {
+          console.log(response.data);
+        });
+
+        /*axios.get("/getPizzas").then((response) =>
+        {
+          setItensPizza(response.data);
+        });
+
+        axios.get("/getBebidas").then((response) =>
+        {
+          setItensBebida(response.data);
+        });
+
+        axios.get("/getBebidas").then((response) =>
+        {
+          setItensCombo(response.data);
+        });*/
     }, []);
     
     return (
