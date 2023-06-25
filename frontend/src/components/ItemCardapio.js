@@ -14,14 +14,15 @@ function ItemCardapio(props){
     setIsModalOpen(false);
   };
 
+
     return (
       <div className={styles.container}>
-        <img className={styles.image} src={props.image} onClick={openModal}/>
+        <img className={styles.image} src={`http://localhost:3333/getImages/${props.description}`} onClick={openModal}/>
         <p className={styles.description}>{props.description}</p>
         <p className={styles.price}>{props.price}</p>
         {isModalOpen && (
           <ModalPizzaComum
-            image={props.image}
+            image={`http://localhost:3333/getImages/${props.description}`}
             description={props.description}
             price={props.price}
             onClose={closeModal}

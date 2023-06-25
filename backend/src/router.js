@@ -1,9 +1,9 @@
 const express = require('express');
+const path = require('path');
 const { SHA256 } = require("sha2");
 const appModel = require('./models/appModel')
 const jwt = require("jsonwebtoken")
 require('dotenv').config()
-
 
 const router = express.Router();
 
@@ -94,9 +94,24 @@ router.get("/getFlavors", (req, res) =>
   res.status(200).json(sabores);
 });
 
-router.get("/getMenuItems", (req, res) => {
-  const itensCardapio = appModel.getCardapio();
-  res.status(200).json(itensCardapio);
+router.get("/getPizzas", (req, res) => {
+  const pizzas = appModel.getPizzas();
+  res.status(200).json(pizzas);
+});
+
+router.get("/getCombos", (req, res) => {
+  const combos = appModel.getCombos();
+  res.status(200).json(combos);
+});
+
+router.get("/getBebidas", (req, res) => {
+  const bebidas = appModel.getBebidas();
+  res.status(200).json(bebidas);
+});
+
+router.get('/getImages/:nome', function (req, res) {
+  const index = appModel.getItemCardapioImage(req.params.nome);
+  res.sendFile(path.resolve(index));
 });
 
 module.exports = router;

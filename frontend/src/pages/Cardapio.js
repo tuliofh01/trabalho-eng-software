@@ -6,19 +6,6 @@ import Header from '../components/Header';
 import ItemCardapio from '../components/ItemCardapio';
 import styles from './Cardapio.module.css';
 
-import aguaLogo from '../assets/bebidas/agua.png';
-import cocaLogo from '../assets/bebidas/coca.png';
-import guaranaLogo from '../assets/bebidas/guarana.png';
-
-import cheddarLogo from '../assets/pizzas/cheddar.png';
-import frangoLogo from "../assets/pizzas/frango.png";
-import milhoLogo from "../assets/pizzas/milho.png";
-import portuguesaLogo from "../assets/pizzas/portuguesa.png";
-import quatroQueijosLogo from "../assets/pizzas/quatroQueijos.png";
-import tomateSecoLogo from "../assets/pizzas/tomateSeco.png";
-
-import comboLogo from "../assets/combos/combo.png";
-
 function Index(){
 
     const [itensPizza, setItensPizza] = useState([]);
@@ -32,25 +19,21 @@ function Index(){
           navigate("/");
         }
 
-        axios.get("/getCardapio").then((response) =>
+        axios.get("http://localhost:3333/getCombos").then((response) =>
         {
-          console.log(response.data);
+          setItensCombo(response.data);
         });
 
-        /*axios.get("/getPizzas").then((response) =>
+        axios.get("http://localhost:3333/getPizzas").then((response) =>
         {
           setItensPizza(response.data);
         });
 
-        axios.get("/getBebidas").then((response) =>
+        axios.get("http://localhost:3333/getBebidas").then((response) =>
         {
           setItensBebida(response.data);
-        });
-
-        axios.get("/getBebidas").then((response) =>
-        {
-          setItensCombo(response.data);
-        });*/
+        });        
+        
     }, []);
     
     return (
@@ -60,64 +43,40 @@ function Index(){
 
         <h2 className={styles.subtitle}>Combos</h2>
         <ContainerCardapio>
-          <ItemCardapio
-            image={comboLogo}
-            description="Pizza + Refri 2 Litros"
-            price="R$ 55.00"
-          />
+          {itensCombo.map((item) => (
+            <ItemCardapio
+            key={item.ID}
+            image={item.IMAGEM_PATH}
+            description={item.DESCRICAO}
+            price={item.VALOR}
+            />
+          ))}
         </ContainerCardapio>
 
         <h2 className={styles.subtitle}>Pizzas</h2>
         <ContainerCardapio>
-          <ItemCardapio
-            image={cheddarLogo}
-            description="Pizza Cheddar"
-            price="R$ 45.00"
-          />
-          <ItemCardapio
-            image={frangoLogo}
-            description="Pizza Frango"
-            price="R$ 50.00"
-          />
-          <ItemCardapio
-            image={milhoLogo}
-            description="Pizza Milho"
-            price="R$ 40.00"
-          />
-          <ItemCardapio
-            image={portuguesaLogo}
-            description="Pizza Portuguesa"
-            price="R$ 50.00"
-          />
-          <ItemCardapio
-            image={quatroQueijosLogo}
-            description="Pizza Quatro Queijos"
-            price="R$ 45.00"
-          />
-          <ItemCardapio
-            image={tomateSecoLogo}
-            description="Pizza Tomate Seco"
-            price="R$ 40.00"
-          />
+          {itensPizza.map((item) => (
+            <ItemCardapio
+            key={item.ID}
+            image={item.IMAGEM_PATH}
+            description={item.DESCRICAO}
+            price={item.VALOR}
+            />
+          ))}
         </ContainerCardapio>
 
         <h2 className={styles.subtitle}>Bebidas</h2>
         <ContainerCardapio>
-          <ItemCardapio
-            image={cocaLogo}
-            description="Coca-Cola Lata"
-            price="R$ 5.00"
-          />
-          <ItemCardapio
-            image={guaranaLogo}
-            description="Guaraná Lata"
-            price="R$ 5.00"
-          />
-          <ItemCardapio
-            image={aguaLogo}
-            description="Água Mineral"
-            price="R$ 4.00"
-          />
+          {itensBebida.map((item) => (
+            <ItemCardapio
+            key={item.ID}
+            image={item.IMAGEM_PATH}
+            description={item.DESCRICAO}
+            price={item.VALOR}
+            />
+          ))}
+
+          
         </ContainerCardapio>
       </div>
     );
