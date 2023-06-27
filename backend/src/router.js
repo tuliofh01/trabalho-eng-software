@@ -114,4 +114,10 @@ router.get('/getImages/:nome', function (req, res) {
   res.sendFile(path.resolve(index));
 });
 
+router.get('/getItemId/:descricao', function (req, res){ 
+  const productDescription = req.params.descricao;
+  const productId = appModel.getItemCardapioId(productDescription)[0]["ID"];
+  res.status(200).send(`${productId}`);
+})
+
 module.exports = router;

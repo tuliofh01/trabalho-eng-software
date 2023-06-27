@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import axios from 'axios';
 import "./ModalPizzaComum.css";
 
 function ModalPizzaComum(props){
@@ -12,6 +13,44 @@ function ModalPizzaComum(props){
   };
 
   function shoppingCartHandler(){
+    let idItemCarrinho;
+    axios
+      .get(`http://localhost:3333/getItemId/${props.description}`)
+      .then((response) => {
+        console.log(response);
+        idItemCarrinho = response.data});
+    const itemsArray = localStorage.getItem("ItensPedido");
+    const totalPrice = localStorage.getItem("TotalPedido");
+
+    // Sets purchased items by ID
+    if(itemsArray){
+      localStorage.setItem(
+        "ItensPedido",
+        itemsArray + ";" + quantidadeRef.current.value + "-" + idItemCarrinho
+      );
+    } else {
+      localStorage.setItem(
+        "ItensPedido",
+        quantidadeRef.current.value + "-" + idItemCarrinho
+      );
+    }
+
+    // Sets total price
+    if(totalPrice){
+      localStorage.setItem("TotalPedido", 
+        String(
+          Number(totalPrice) + (Number(props.price) * Number(quantidadeRef.current.value))
+        )
+      );
+    } else {
+      localStorage.setItem(
+        "TotalPedido",
+        String(
+            Number(props.price) * Number(quantidadeRef.current.value)
+        )
+      );
+    }
+
     alert("Carrinho atualizado!");
   }
 

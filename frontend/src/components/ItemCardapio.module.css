@@ -21,6 +21,7 @@
     font-size: medium;
     color: black;
     text-align: left;
+    margin-bottom: 0;
 }
 
 .price {
@@ -28,4 +29,5 @@
     font-size: medium;
     color: #B11C14;
     text-align: left;
+    margin-top: 5px;
 }

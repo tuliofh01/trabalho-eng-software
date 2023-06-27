@@ -162,6 +162,14 @@ function getBebidas()
   return rows;
 }
 
+function getItemCardapioId(description){
+  const dbPath = path.resolve(__dirname, "../assets/database.db");
+  const db = new Database(dbPath);
+  const query = `SELECT ID FROM ITEMCARDAPIO WHERE DESCRICAO = '${description}'`;
+  let rows = db.prepare(query).all();
+  return rows;
+}
+
 module.exports = {
   criarConta: criarConta,
   criarEndereco: criarEndereco,
@@ -174,5 +182,6 @@ module.exports = {
   getCombos: getCombos,
   getBebidas: getBebidas,
   getSaboresPizza: getSaboresPizza,
-  getItemCardapioImage: getItemCardapioImage
+  getItemCardapioImage: getItemCardapioImage,
+  getItemCardapioId: getItemCardapioId
 };
