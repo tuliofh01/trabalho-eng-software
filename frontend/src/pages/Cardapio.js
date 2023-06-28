@@ -5,6 +5,8 @@ import ContainerCardapio from '../components/ContainerCardapio';
 import Header from '../components/Header';
 import ItemCardapio from '../components/ItemCardapio';
 import styles from './Cardapio.module.css';
+import ItemPizzaPersonalizada from '../components/ItemPizzaPersonalizada';
+import pizzaPersonalizada from '../assets/pizzas/pizzaPersonalizada.png'
 
 function Index(){
 
@@ -55,6 +57,12 @@ function Index(){
 
         <h2 className={styles.subtitle}>Pizzas</h2>
         <ContainerCardapio>
+          <ItemPizzaPersonalizada
+            image={pizzaPersonalizada}
+            description={`Monte sua pizza de dois sabores!`}
+            price={`R$ 60,00`}
+          />
+
           {itensPizza.map((item) => (
             <ItemCardapio
             key={item.ID}

@@ -1,12 +1,25 @@
-import { useRef, useState } from "react";
+import axios from 'axios';
+import { useRef, useState, useEffect } from "react";
 import "./ModalPizzaComum.css";
 
 function ModalPizzaPersonalizada(props) {
   const quantidadeRef = useRef();
+
+  const [sabor1, setSabor1] = useState([]);
+  const [sabor2, setSabor2] = useState([]);
+
   const sabor1Ref = useRef();
   const sabor2Ref = useRef();
-
+  
   const [isOpen, setIsOpen] = useState(true);
+
+  useEffect(() => {
+    axios.get("http://localhost:3333/getFlavors").then((response) => {
+      setSabor1(response.data);
+      setSabor2(response.data);
+    });
+  }, [sabor1, sabor2])
+
   function closeModal() {
     setIsOpen(false);
     props.onClose();
@@ -16,6 +29,17 @@ function ModalPizzaPersonalizada(props) {
     alert("Carrinho atualizado!");
   }
 
+  function changeOptionsSabor1(event) {
+    console.log(event.target.value);
+    //delete sabor2[event.target.value];
+    //console.log(sabor2);
+  }
+
+  function changeOptionsSabor2(event) {
+    delete sabor1[event.target.value];
+  }
+
+
   return (
     <div className={`modalCard ${isOpen ? "open" : ""}`}>
       <div className="modalContent">
@@ -23,8 +47,20 @@ function ModalPizzaPersonalizada(props) {
         <p className="modalText">
           {props.description} - {props.price}
         </p>
-        <input ref={sabor1Ref} placeholder="Sabor 1" />
-        <input ref={sabor2Ref} placeholder="Sabor 2" />
+        <select placeholder='Sabor 1' ref={sabor1Ref} onChange={changeOptionsSabor1}>
+        {sabor1.map((item) => (
+         <option key={item.ID} value={item.DESCRICAO}>
+         {item.DESCRICAO}
+            </option>
+          ))}
+        </select>
+        <select placeholder='Sabor 2' ref={sabor2Ref} onChange={changeOptionsSabor2}>
+          {sabor2.map((item) => (
+            <option key={item.ID} value={item.DESCRICAO}>
+              {item.DESCRICAO}
+            </option>
+          ))}
+        </select>
         <input
           ref={quantidadeRef}
           type="number"
