@@ -15,7 +15,7 @@ function populateDatabase()
   const dbPath = path.resolve(__dirname, "../assets/database.db");
   const db = new Database(dbPath);
 
-  const querySabores = `SELECT * FROM SABOR`;
+  const querySabores = `SELECT * FROM SABOR_PIZZA`;
   const rowsSabores = db.prepare(querySabores).all();
   let counter = 1;
                 

@@ -96,8 +96,7 @@ function getSaboresPizza()
   const db = new Database(dbPath);
   const query = `SELECT * FROM SABOR_PIZZA`;
   const rows = db.prepare(query).all();
-  const nomes = rows.map(obj => obj.NOME);
-  return nomes;
+  return rows;
 }
 
 /*function getCardapio()
@@ -124,8 +123,6 @@ function getItemCardapioImage(descricao)
   const query = `SELECT * FROM ITEMCARDAPIO WHERE DESCRICAO = '${descricao}'`;
 
   let rows = db.prepare(query).get();
-
-  console.log(rows.IMAGEM_PATH);
 
   return rows.IMAGEM_PATH;
 }

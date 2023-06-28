@@ -3,7 +3,7 @@ create table BAIRRO (
 	NOME text
 );
 
-insert into BAIRRO (NOME) values ('Aeroporto'), ('Bispo de Maura'), ('Braúnas'), ('Campus UFMG'), ('Confisco'), ('Conjunto Celso Machado'), ('Conjunto Lagoa'), ('Conjunto São Francisco de Assis'), ('Engenho Nogueira'), ('Garças'), ('Indaiá'), ('Itatiaia'), ('Jaraguá'), ('Jardim Atlântico'), ('Lagoa da Pampulha'), ('Nova Pampulha'), ('Novo Ouro Preto'), ('São Francisco'), ('São José'), ('Trevo'), ('Universitário'), ('Vila Aeroporto Jaraguá'), ('Vila Antena Montanhês'), ('Vila Engenho Nogueira'), ('Vila Jardim Alvorada'), ('Vila Jardim Montanhês'), ('Vila Jardim São José'), ('Vila Paquetá'), ('Vila Real I'), ('Vila Real II'), ('Vila Rica'), ('Vila Santa Rosa'), ('Vila Santo Antônio'), ('Vila Santo Antônio Barroquinha'), ('Vila São Francisco'), ('Vila Suzana I'), ('Vila Suzana II'), ('Xangri-lá'), ('Unidas'), ('Universo');
+insert into BAIRRO (NOME) values ('Aeroporto'), ('Bispo de Maura'), ('Braï¿½nas'), ('Campus UFMG'), ('Confisco'), ('Conjunto Celso Machado'), ('Conjunto Lagoa'), ('Conjunto Sï¿½o Francisco de Assis'), ('Engenho Nogueira'), ('Garï¿½as'), ('Indaiï¿½'), ('Itatiaia'), ('Jaraguï¿½'), ('Jardim Atlï¿½ntico'), ('Lagoa da Pampulha'), ('Nova Pampulha'), ('Novo Ouro Preto'), ('Sï¿½o Francisco'), ('Sï¿½o Josï¿½'), ('Trevo'), ('Universitï¿½rio'), ('Vila Aeroporto Jaraguï¿½'), ('Vila Antena Montanhï¿½s'), ('Vila Engenho Nogueira'), ('Vila Jardim Alvorada'), ('Vila Jardim Montanhï¿½s'), ('Vila Jardim Sï¿½o Josï¿½'), ('Vila Paquetï¿½'), ('Vila Real I'), ('Vila Real II'), ('Vila Rica'), ('Vila Santa Rosa'), ('Vila Santo Antï¿½nio'), ('Vila Santo Antï¿½nio Barroquinha'), ('Vila Sï¿½o Francisco'), ('Vila Suzana I'), ('Vila Suzana II'), ('Xangri-lï¿½'), ('Unidas'), ('Universo');
 
 create table ENDERECO (
 	ID integer primary key autoincrement,
@@ -35,7 +35,7 @@ create table USUARIO (
 create table PEDIDO (
 	ID integer primary key autoincrement,
 	CPF text,
-	DESCRICAO text,
+	STATUSPEDIDO text,
 	IDENDERECO integer,
 	VALOR numeric,
 	
@@ -62,23 +62,22 @@ create table ITEMCARDAPIO (
 	IDSABOR2 integer,
 	
 	foreign key (IDSABOR1)
-	references SABOR(ID)
+	references SABOR_PIZZA(ID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
 		
 	foreign key (IDSABOR2)
-	references SABOR(ID)
+	references SABOR_PIZZA(ID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 );
-
-insert into ITEMCARDAPIO (DESCRICAO, VALOR, TIPO, IDSABOR1)
-values ('Pizza teste', 90.2, 'Pizza', 1);
 
 create table ITEMPEDIDO (
 	IDPEDIDO integer,
 	IDITEM integer,
 	QUANTIDADE integer,
+	
+	primary key (IDPEDIDO, IDITEM),
 	
 	foreign key (IDPEDIDO)
 	references PEDIDO (ID)
