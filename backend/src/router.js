@@ -72,6 +72,21 @@ router.post("/registerItemOrder", verifyToken, (req, res) => {
   res.status(200).send("ok!")
 });
 
+router.post("/registerOrder", verifyToken, (req, res) => {
+  const data = {
+    cpf: req.body.cpf,
+    endereco: req.body.endereco,
+    valor: req.body.valor,
+  };
+  const idPedido = appModel.setPedido(data.cpf, data.endereco, data.valor);
+  res.status(200).send(`${idPedido}`);
+})
+
+router.post("/getUserData", verifyToken, (req, res) => {
+  const email = req.username;
+  const data = appModel.getUserData(email);
+  res.status(200).json(data);
+})
 
 router.get("/getNeighborhoods", (req, res) => {
   const bairros = appModel.getBairros();

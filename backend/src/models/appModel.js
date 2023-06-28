@@ -182,14 +182,40 @@ function setItemPedido(idPedido, idItem, qtde){
   const insertStmt = db.prepare(
     "INSERT INTO ITEMPEDIDO (IDPEDIDO, IDITEM, QUANTIDADE) VALUES (?, ?, ?)"
   );
-  const idDoPedido = idPedido;
-  const idDoItem = idItem;
-  const quantidade = qtde;
+  const idDoPedido = Number(idPedido);
+  const idDoItem = Number(idItem);
+  const quantidade = Number(qtde);
   // Execute the INSERT statement
   insertStmt.run(idDoPedido, idDoItem, quantidade);
   // Close the database connection
   db.close();
 }
+
+function setPedido(cpf, endereco, valor){
+  const dbPath = path.resolve(__dirname, "../assets/database.db");
+  const db = new Database(dbPath);
+  // Prepare the INSERT statement
+  const insertStmt = db.prepare(
+    "INSERT INTO PEDIDO (CPF, IDENDERECO, VALOR) VALUES (?, ?, ?)"
+  );
+  // Execute the INSERT statement
+  const result = insertStmt.run(cpf, endereco, valor);
+
+  // Close the database connection
+  db.close();
+
+  return result.lastInsertRowid;
+}
+
+function getUserData(username){
+  const email = username;
+  const dbPath = path.resolve(__dirname, "../assets/database.db");
+  const db = new Database(dbPath);
+  const query = `SELECT * FROM USUARIO WHERE EMAIL = '${email}'`;
+  let rows = db.prepare(query).all();
+  return rows;
+}
+
 
 module.exports = {
   criarConta: criarConta,
@@ -206,5 +232,7 @@ module.exports = {
   getItemCardapioImage: getItemCardapioImage,
   getItemCardapioId: getItemCardapioId,
   getItemCardapioDescription: getItemCardapioDescription,
-  setItemPedido: setItemPedido
+  setItemPedido: setItemPedido,
+  getUserData: getUserData,
+  setPedido: setPedido
 };

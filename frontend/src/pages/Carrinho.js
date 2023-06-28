@@ -36,7 +36,34 @@ function Carrinho() {
   }
 
   async function confirmOrder(){
+    let data;
+    await axios.post("/getUserData", {
+      token: localStorage.getItem("token")
+    }).then((response) => data = response.data[0])
+    console.log(data)
     
+    let idPedido;
+    await axios.post("/registerOrder", {
+      token: localStorage.getItem("token"),
+      cpf: data.CPF,
+      endereco: Number(data.IDENDERECO),
+      valor: Number(localStorage.getItem("TotalPedido"))
+    }).then((response) => idPedido = response.data);
+
+    const itemsArrayRaw = localStorage.getItem("ItensPedido").split(";");
+    const itemsArray = [...itemsArrayRaw];
+
+    for (const element of itemsArray) {
+      const qtde = element.split('-')[0]
+      const itemId = element.split("-")[1];
+      await axios.post("/registerItemOrder", {
+        token: localStorage.getItem("token"),
+        idPedido: idPedido,
+        idItem: itemId,
+        qtde: qtde
+      });
+    }
+    alert("Pedido confirmado com sucesso!");
   }
 
   return (
@@ -55,9 +82,7 @@ function Carrinho() {
       <p className={styles.p}>
         <strong>Total:</strong> R${localStorage.getItem("TotalPedido")}
       </p>
-      
-      <button onClick={confirmOrder}>Confirmar</button>
-
+      <button className={styles.submitButton} onClick={confirmOrder}>Confirmar</button>
     </div>
   );
 }
