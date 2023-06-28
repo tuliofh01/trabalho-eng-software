@@ -182,11 +182,11 @@ function setItemPedido(idPedido, idItem, qtde){
   const insertStmt = db.prepare(
     "INSERT INTO ITEMPEDIDO (IDPEDIDO, IDITEM, QUANTIDADE) VALUES (?, ?, ?)"
   );
-  const idPedido = idPedido;
-  const idItem = idItem;
-  const qtde = qtde;
+  const idDoPedido = idPedido;
+  const idDoItem = idItem;
+  const quantidade = qtde;
   // Execute the INSERT statement
-  insertStmt.run(idPedido, idItem, qtde);
+  insertStmt.run(idDoPedido, idDoItem, quantidade);
   // Close the database connection
   db.close();
 }

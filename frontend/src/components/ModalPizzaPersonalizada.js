@@ -45,7 +45,7 @@ function ModalPizzaPersonalizada(props) {
       <div className="modalContent">
         <img className="image" src={props.image} />
         <p className="modalText">
-          {props.description} - {props.price}
+          {props.description} - R$ {props.price}
         </p>
         <select placeholder='Sabor 1' ref={sabor1Ref} onChange={changeOptionsSabor1}>
         {sabor1.map((item) => (

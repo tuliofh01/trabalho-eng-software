@@ -60,7 +60,7 @@ function Index(){
           <ItemPizzaPersonalizada
             image={pizzaPersonalizada}
             description={`Monte sua pizza de dois sabores!`}
-            price={`R$ 60,00`}
+            price={60}
           />
 
           {itensPizza.map((item) => (
