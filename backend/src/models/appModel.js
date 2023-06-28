@@ -199,7 +199,22 @@ function insertNewPizzaPersonalizada(sabor1Id, sabor2Id, valor){
   }
 
   return row;
+}
 
+function setItemPedido(idPedido, idItem, qtde){
+  const dbPath = path.resolve(__dirname, "../assets/database.db");
+  const db = new Database(dbPath);
+  // Prepare the INSERT statement
+  const insertStmt = db.prepare(
+    "INSERT INTO ITEMPEDIDO (IDPEDIDO, IDITEM, QUANTIDADE) VALUES (?, ?, ?)"
+  );
+  const idDoPedido = idPedido;
+  const idDoItem = idItem;
+  const quantidade = qtde;
+  // Execute the INSERT statement
+  insertStmt.run(idDoPedido, idDoItem, quantidade);
+  // Close the database connection
+  db.close();
 }
 
 module.exports = {
@@ -217,5 +232,6 @@ module.exports = {
   getItemCardapioImage: getItemCardapioImage,
   getItemCardapioId: getItemCardapioId,
   getItemCardapioDescription: getItemCardapioDescription,
-  insertNewPizzaPersonalizada: insertNewPizzaPersonalizada
-};
+  insertNewPizzaPersonalizada: insertNewPizzaPersonalizada,
+  setItemPedido: setItemPedido
+}

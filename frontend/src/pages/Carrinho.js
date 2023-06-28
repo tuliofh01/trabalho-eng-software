@@ -13,10 +13,10 @@ function Carrinho() {
       navigate("/");
     }
 
-    shoppingCartHandler();
+    shoppingCartTable();
   }, []);
 
-  async function shoppingCartHandler() {
+  async function shoppingCartTable() {
     const itemsArrayRaw = localStorage.getItem("ItensPedido").split(";");
     const itemsArray = [...itemsArrayRaw];
 
@@ -35,6 +35,10 @@ function Carrinho() {
     setItensCarrinho(updatedItems);
   }
 
+  async function confirmOrder(){
+    
+  }
+
   return (
     <div className={styles.container}>
       <Header />
@@ -51,6 +55,9 @@ function Carrinho() {
       <p className={styles.p}>
         <strong>Total:</strong> R${localStorage.getItem("TotalPedido")}
       </p>
+      
+      <button onClick={confirmOrder}>Confirmar</button>
+
     </div>
   );
 }

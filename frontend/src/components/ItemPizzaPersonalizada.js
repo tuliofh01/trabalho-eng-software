@@ -20,11 +20,12 @@ function ItemPizzaPersonalizada(props){
       <div className={styles.item}>
         <img className={styles.image} src={pizzaPersonalizada} onClick={openModal}/>
         <p className={styles.description}>{props.description}</p>
+        <p className={styles.price}>R$ {props.price}</p>
         {isModalOpen && (
           <ModalPizzaPersonalizada
             image={pizzaPersonalizada}
             description={`Monte sua pizza de dois sabores!`}
-            price={`R$ 60,00`}
+            price={60}
             onClose={closeModal}
           />
         )}

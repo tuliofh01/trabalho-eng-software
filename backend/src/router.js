@@ -62,9 +62,14 @@ router.post("/createAddress", async (req, res) => {
   res.status(200).send(addressId);
 });
 
-router.post("/registerOrder", verifyToken, (req, res) => {
-
-
+router.post("/registerItemOrder", verifyToken, (req, res) => {
+  const data = {
+    idPedido: req.body.idPedido,
+    idItem: req.body.idItem,
+    qtde: req.body.qtde
+  }
+  appModel.setItemPedido(data.idPedido, data.idItem, data.qtde);
+  res.status(200).send("ok!")
 });
 
 
