@@ -114,10 +114,16 @@ router.get('/getImages/:nome', function (req, res) {
   res.sendFile(path.resolve(index));
 });
 
-router.get('/getItemId/:descricao', function (req, res){ 
-  const productDescription = req.params.descricao;
+router.post('/getItemId', function (req, res){ 
+  const productDescription = req.body.descricao;
   const productId = appModel.getItemCardapioId(productDescription)[0]["ID"];
   res.status(200).send(`${productId}`);
-})
+});
+
+router.post('/getItemDescription', function (req, res){
+  const productId = req.body.id;
+  const productDescription = appModel.getItemCardapioDescription(productId)[0]["DESCRICAO"];
+  res.status(200).send(productDescription);
+});
 
 module.exports = router;

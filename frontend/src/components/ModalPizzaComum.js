@@ -12,46 +12,53 @@ function ModalPizzaComum(props){
     props.onClose();
   };
 
-  function shoppingCartHandler(){
+  async function shoppingCartHandler() {
     let idItemCarrinho;
-    axios
-      .get(`http://localhost:3333/getItemId/${props.description}`)
+    await axios
+      .post("/getItemId", {
+        descricao: props.description,
+      })
       .then((response) => {
-        console.log(response);
-        idItemCarrinho = response.data});
-    const itemsArray = localStorage.getItem("ItensPedido");
-    const totalPrice = localStorage.getItem("TotalPedido");
+        idItemCarrinho = response.data;
 
-    // Sets purchased items by ID
-    if(itemsArray){
-      localStorage.setItem(
-        "ItensPedido",
-        itemsArray + ";" + quantidadeRef.current.value + "-" + idItemCarrinho
-      );
-    } else {
-      localStorage.setItem(
-        "ItensPedido",
-        quantidadeRef.current.value + "-" + idItemCarrinho
-      );
-    }
+        const itemsArray = localStorage.getItem("ItensPedido");
+        const totalPrice = localStorage.getItem("TotalPedido");
 
-    // Sets total price
-    if(totalPrice){
-      localStorage.setItem("TotalPedido", 
-        String(
-          Number(totalPrice) + (Number(props.price) * Number(quantidadeRef.current.value))
-        )
-      );
-    } else {
-      localStorage.setItem(
-        "TotalPedido",
-        String(
-            Number(props.price) * Number(quantidadeRef.current.value)
-        )
-      );
-    }
+        // Sets purchased items by ID
+        if (itemsArray) {
+          localStorage.setItem(
+            "ItensPedido",
+            itemsArray +
+              ";" +
+              quantidadeRef.current.value +
+              "-" +
+              idItemCarrinho
+          );
+        } else {
+          localStorage.setItem(
+            "ItensPedido",
+            quantidadeRef.current.value + "-" + idItemCarrinho
+          );
+        }
 
-    alert("Carrinho atualizado!");
+        // Sets total price
+        if (totalPrice) {
+          localStorage.setItem(
+            "TotalPedido",
+            String(
+              Number(totalPrice) +
+                Number(props.price) * Number(quantidadeRef.current.value)
+            )
+          );
+        } else {
+          localStorage.setItem(
+            "TotalPedido",
+            String(Number(props.price) * Number(quantidadeRef.current.value))
+          );
+        }
+
+        alert("Carrinho atualizado!");
+      });
   }
 
   return (
