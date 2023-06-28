@@ -175,6 +175,29 @@ function getItemCardapioDescription(id){
   return rows;
 }
 
+function insertNewPizzaPersonalizada(sabor1Id, sabor2Id, valor){
+  const dbPath = path.resolve(__dirname, "../assets/database.db");
+  const db = new Database(dbPath);
+
+  const sabor1Desc = db.prepare(`SELECT DESCRICAO FROM SABOR_PIZZA WHERE ID = ${sabor1Id}`).get()['DESCRICAO'];
+  const sabor2Desc = db.prepare(`SELECT DESCRICAO FROM SABOR_PIZZA WHERE ID = ${sabor2Id}`).get()['DESCRICAO'];
+
+  const querySearch = `SELECT * FROM ITEMCARDAPIO WHERE IDSABOR1 = ${sabor1Id} and IDSABOR2 = ${sabor2Id}`;
+
+  let row = db.prepare(querySearch).get();
+
+  if (row == null)
+  {
+    const queryInsert = `INSERT INTO ITEMCARDAPIO (DESCRICAO, VALOR, TIPO, IDSABOR1, IDSABOR2)
+    VALUES (?, ?, ?, ?, ?)`;
+
+    const info = db.prepare(queryInsert).run(`Pizza Dois Sabores de ${sabor1Desc} + ${sabor2Desc}`, valor, 'Pizza', sabor1Id, sabor2Id);
+    row = db.prepare(`SELECT * FROM ITEMCARDAPIO WHERE ID = ${info.lastInsertRowid}`).get();
+  }
+  //console.log(row);
+  return row;
+}
+
 function setItemPedido(idPedido, idItem, qtde){
   const dbPath = path.resolve(__dirname, "../assets/database.db");
   const db = new Database(dbPath);
@@ -232,7 +255,8 @@ module.exports = {
   getItemCardapioImage: getItemCardapioImage,
   getItemCardapioId: getItemCardapioId,
   getItemCardapioDescription: getItemCardapioDescription,
+  insertNewPizzaPersonalizada: insertNewPizzaPersonalizada,
   setItemPedido: setItemPedido,
   getUserData: getUserData,
   setPedido: setPedido
-};
+}

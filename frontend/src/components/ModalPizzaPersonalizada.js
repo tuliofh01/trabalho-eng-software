@@ -5,11 +5,14 @@ import "./ModalPizzaComum.css";
 function ModalPizzaPersonalizada(props) {
   const quantidadeRef = useRef();
 
+  const sabor1Ref = useRef();
+  const sabor2Ref = useRef();
+
   const [sabor1, setSabor1] = useState([]);
   const [sabor2, setSabor2] = useState([]);
 
-  const sabor1Ref = useRef();
-  const sabor2Ref = useRef();
+  let selectedSabor1;
+  let selectedSabor2;
   
   const [isOpen, setIsOpen] = useState(true);
 
@@ -25,18 +28,72 @@ function ModalPizzaPersonalizada(props) {
     props.onClose();
   }
 
-  function shoppingCartHandler() {
-    alert("Carrinho atualizado!");
+  async function shoppingCartHandler() {
+    let idItemCarrinho;
+    console.log(props.price);
+
+
+    await axios
+      .post("/insertNewPizzaPersonalizada", {
+        descricao: props.description,
+        sabor1Id: (sabor1Ref.current.selectedIndex+1),
+        sabor2Id: (sabor2Ref.current.selectedIndex+1),
+        price: props.price
+      })
+      .then((response) => {
+        idItemCarrinho = response.data;
+
+        const itemsArray = localStorage.getItem("ItensPedido");
+        const totalPrice = localStorage.getItem("TotalPedido");
+
+        // Sets purchased items by ID
+        if (itemsArray) {
+          localStorage.setItem(
+            "ItensPedido",
+            itemsArray +
+              ";" +
+              quantidadeRef.current.value +
+              "-" +
+              idItemCarrinho
+          );
+        } else {
+          localStorage.setItem(
+            "ItensPedido",
+            quantidadeRef.current.value + "-" + idItemCarrinho
+          );
+        }
+
+        // Sets total price
+        if (totalPrice) {
+          localStorage.setItem(
+            "TotalPedido",
+            String(
+              Number(totalPrice) +
+                Number(props.price) * Number(quantidadeRef.current.value)
+            )
+          );
+        } else {
+          localStorage.setItem(
+            "TotalPedido",
+            String(Number(props.price) * Number(quantidadeRef.current.value))
+          );
+        }
+
+        alert("Carrinho atualizado!");
+      });
   }
 
-  function changeOptionsSabor1(event) {
-    console.log(event.target.value);
+  function changeOptionsSabor1(e) {
+    //console.log(e.target.value);
+    //console.log(e.target.selectedIndex);
+    //console.log(sabor1Ref.current);
+    //selectedSabor1 = e.target.value;
     //delete sabor2[event.target.value];
     //console.log(sabor2);
   }
 
   function changeOptionsSabor2(event) {
-    delete sabor1[event.target.value];
+    //delete sabor1[event.target.value];
   }
 
 
@@ -64,7 +121,7 @@ function ModalPizzaPersonalizada(props) {
         <input
           ref={quantidadeRef}
           type="number"
-          min="0"
+          min="1"
           placeholder="Quantidade de itens"
         />
         <button className="modalClose" onClick={shoppingCartHandler}>
