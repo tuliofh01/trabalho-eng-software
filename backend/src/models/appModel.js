@@ -178,6 +178,22 @@ function getItemCardapioDescription(id){
   return rows;
 }
 
+function setItemPedido(idPedido, idItem, qtde){
+  const dbPath = path.resolve(__dirname, "../assets/database.db");
+  const db = new Database(dbPath);
+  // Prepare the INSERT statement
+  const insertStmt = db.prepare(
+    "INSERT INTO ITEMPEDIDO (IDPEDIDO, IDITEM, QUANTIDADE) VALUES (?, ?, ?)"
+  );
+  const idPedido = idPedido;
+  const idItem = idItem;
+  const qtde = qtde;
+  // Execute the INSERT statement
+  insertStmt.run(idPedido, idItem, qtde);
+  // Close the database connection
+  db.close();
+}
+
 module.exports = {
   criarConta: criarConta,
   criarEndereco: criarEndereco,
@@ -192,5 +208,6 @@ module.exports = {
   getSaboresPizza: getSaboresPizza,
   getItemCardapioImage: getItemCardapioImage,
   getItemCardapioId: getItemCardapioId,
-  getItemCardapioDescription: getItemCardapioDescription
+  getItemCardapioDescription: getItemCardapioDescription,
+  setItemPedido: setItemPedido
 };
