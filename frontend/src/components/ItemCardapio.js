@@ -16,7 +16,7 @@ function ItemCardapio(props){
 
 
     return (
-      <div className={styles.container}>
+      <div className={styles.item}>
         <img className={styles.image} src={`http://localhost:3333/getImages/${props.description}`} onClick={openModal}/>
         <p className={styles.description}>{props.description}</p>
         <p className={styles.price}>R$ {props.price}</p>
