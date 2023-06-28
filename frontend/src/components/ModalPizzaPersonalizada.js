@@ -8,7 +8,6 @@ function ModalPizzaPersonalizada(props) {
   const sabor1Ref = useRef();
   const sabor2Ref = useRef();
 
-
   const [sabor1, setSabor1] = useState([]);
   const [sabor2, setSabor2] = useState([]);
 
@@ -31,6 +30,7 @@ function ModalPizzaPersonalizada(props) {
 
   async function shoppingCartHandler() {
     let idItemCarrinho;
+    console.log(props.price);
 
 
     await axios
@@ -38,7 +38,7 @@ function ModalPizzaPersonalizada(props) {
         descricao: props.description,
         sabor1Id: (sabor1Ref.current.selectedIndex+1),
         sabor2Id: (sabor2Ref.current.selectedIndex+1),
-        valor: props.price
+        price: props.price
       })
       .then((response) => {
         idItemCarrinho = response.data;
@@ -84,9 +84,9 @@ function ModalPizzaPersonalizada(props) {
   }
 
   function changeOptionsSabor1(e) {
-    console.log(e.target.value);
-    console.log(e.target.selectedIndex);
-    console.log(sabor1Ref.current);
+    //console.log(e.target.value);
+    //console.log(e.target.selectedIndex);
+    //console.log(sabor1Ref.current);
     //selectedSabor1 = e.target.value;
     //delete sabor2[event.target.value];
     //console.log(sabor2);

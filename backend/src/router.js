@@ -133,7 +133,6 @@ router.post('/getItemDescription', function (req, res){
 
 router.post('/insertNewPizzaPersonalizada', function (req, res)
 {
-  console.log(req);
   const newPizza = appModel.insertNewPizzaPersonalizada(req.body.sabor1Id, req.body.sabor2Id, req.body.price);
   res.status(200).send(newPizza);
 })
