@@ -42,44 +42,49 @@ function Carrinho() {
   }
 
   async function registerOrder(status){
-    let data;
-    await axios.post("/getUserData", {
-      token: localStorage.getItem("token")
-    }).then((response) => data = response.data[0])
-    
-    let idPedido;
-    await axios.post("/registerOrder", {
-      token: localStorage.getItem("token"),
-      cpf: data.CPF,
-      endereco: Number(data.IDENDERECO),
-      valor: Number(localStorage.getItem("TotalPedido")),
-      statusPedido: status
-    }).then((response) => idPedido = response.data);
-
-    const itemsArrayRaw = localStorage.getItem("ItensPedido").split(";");
-    const itemsArray = [...itemsArrayRaw];
-
-    for (const element of itemsArray) {
-      const qtde = element.split('-')[0]
-      const itemId = element.split("-")[1];
-      await axios.post("/registerItemOrder", {
+    try{  
+      let data;
+      await axios.post("/getUserData", {
+        token: localStorage.getItem("token")
+      }).then((response) => data = response.data[0])
+      
+      let idPedido;
+      await axios.post("/registerOrder", {
         token: localStorage.getItem("token"),
-        idPedido: idPedido,
-        idItem: itemId,
-        qtde: qtde
-      });
-    }
-    if(status === "CONFIRMADO"){
-      alert("Pedido confirmado com sucesso!");
-    } else {
-      alert("Pedido cancelado com sucesso!");
-    }
+        cpf: data.CPF,
+        endereco: Number(data.IDENDERECO),
+        valor: Number(localStorage.getItem("TotalPedido")),
+        statusPedido: status
+      }).then((response) => idPedido = response.data);
 
-    if(localStorage.getItem("ItensPedido") && localStorage.getItem("TotalPedido")){
-      localStorage.removeItem("ItensPedido");
-      localStorage.removeItem("TotalPedido");
+      const itemsArrayRaw = localStorage.getItem("ItensPedido").split(";");
+      const itemsArray = [...itemsArrayRaw];
+
+      for (const element of itemsArray) {
+        const qtde = element.split('-')[0]
+        const itemId = element.split("-")[1];
+        await axios.post("/registerItemOrder", {
+          token: localStorage.getItem("token"),
+          idPedido: idPedido,
+          idItem: itemId,
+          qtde: qtde
+        });
+      }
+      if(status === "CONFIRMADO"){
+        alert("Pedido confirmado com sucesso!");
+      } else {
+        alert("Pedido cancelado com sucesso!");
+      }
+
+      if(localStorage.getItem("ItensPedido") && localStorage.getItem("TotalPedido")){
+        localStorage.removeItem("ItensPedido");
+        localStorage.removeItem("TotalPedido");
+      }
+      navigate("/cardapio")
+    } catch (error){
+      console.log(error);
+      alert("Carrinho vazio!");
     }
-    navigate("/cardapio")
   }
 
   return (
