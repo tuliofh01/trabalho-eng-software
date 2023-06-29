@@ -30,7 +30,8 @@ router.post("/authenticateUser", async (req, res) => {
         const key = process.env.SECRET_KEY_TOKEN;
         const options = {expiresIn : "1h"}
         const token = jwt.sign(payload, key, options)
-        res.status(200).send(token);
+        const userData = appModel.getUserData(username);
+        res.status(200).send({token, userData});
     } 
     else {
       res.status(401).json({"error": "unauthorized access"});
@@ -78,8 +79,9 @@ router.post("/registerOrder", verifyToken, (req, res) => {
     endereco: req.body.endereco,
     valor: req.body.valor,
     status: req.body.statusPedido,
+    dataHora: req.body.dataHora
   };
-  const idPedido = appModel.setPedido(data.cpf, data.endereco, data.valor, data.status);
+  const idPedido = appModel.setPedido(data);
   res.status(200).send(`${idPedido}`);
 })
 
@@ -151,6 +153,13 @@ router.post('/insertNewPizzaPersonalizada', function (req, res)
 {
   const newPizza = appModel.insertNewPizzaPersonalizada(req.body.sabor1Id, req.body.sabor2Id, req.body.price);
   res.status(200).send(newPizza);
-})
+});
+
+router.post('/getPedidosUsuario', function (req, res)
+{
+  const pedidos = appModel.getPedidosUsuario(req.body.cpf);
+  res.status(200).send(pedidos);
+});
+
 
 module.exports = router;

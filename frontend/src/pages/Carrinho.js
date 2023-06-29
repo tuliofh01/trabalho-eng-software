@@ -18,23 +18,27 @@ function Carrinho() {
 
   async function shoppingCartTable() {
     try{
-      const itemsArrayRaw = localStorage.getItem("ItensPedido").split(";");
-      const itemsArray = [...itemsArrayRaw];
+      const orderItems = localStorage.getItem("ItensPedido");
+      if (orderItems !== null)
+      {
+        const itemsArrayRaw = orderItems.split(";");
+        const itemsArray = [...itemsArrayRaw];
 
-      const itemPromises = itemsArray.map(async (item) => {
-      const itemProps = item.split("-");
-      const itemAmount = itemProps[0];
-      const itemId = itemProps[1];
+        const itemPromises = itemsArray.map(async (item) => {
+        const itemProps = item.split("-");
+        const itemAmount = itemProps[0];
+        const itemId = itemProps[1];
 
-      const response = await axios.post("/getItemDescription", {
-        id: itemId,
+        const response = await axios.post("/getItemDescription", {
+          id: itemId,
+        });
+        const itemDescription = response.data;
+
+        return itemAmount + " - " + itemDescription;
       });
-      const itemDescription = response.data;
-
-      return itemAmount + " - " + itemDescription;
-    });
-      const updatedItems = await Promise.all(itemPromises);
-      setItensCarrinho(updatedItems);
+        const updatedItems = await Promise.all(itemPromises);
+        setItensCarrinho(updatedItems);
+      }
     } catch (error){
       console.log(error);
     }
@@ -45,15 +49,19 @@ function Carrinho() {
     let data;
     await axios.post("/getUserData", {
       token: localStorage.getItem("token")
-    }).then((response) => data = response.data[0])
+    }).then((response) => data = response.data);
     
     let idPedido;
+    const dataHoraAtuais = new Date();
+    console.log(dataHoraAtuais.toLocaleString('pt-BR', {timezone: 'UTC-3'}));
+
     await axios.post("/registerOrder", {
       token: localStorage.getItem("token"),
       cpf: data.CPF,
       endereco: Number(data.IDENDERECO),
       valor: Number(localStorage.getItem("TotalPedido")),
-      statusPedido: status
+      statusPedido: status,
+      dataHora: dataHoraAtuais.toLocaleString('pt-BR', {timezone: 'UTC-3'})
     }).then((response) => idPedido = response.data);
 
     const itemsArrayRaw = localStorage.getItem("ItensPedido").split(";");
@@ -86,32 +94,38 @@ function Carrinho() {
     <div className={styles.container}>
       <Header />
       <h2 className={styles.title}>Itens no carrinho</h2>
-      <table className={styles.table}>
-        <tbody>
-          {itensCarrinho.map((item, index) => (
-            <tr key={index}>
-              <td className={styles.td}>{item}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <p className={styles.p}>
-        <strong>Total:</strong> R${localStorage.getItem("TotalPedido")}
-      </p>
-      <div className={styles.buttonContainer}>
-        <button
-          className={styles.submitButton}
-          onClick={() => registerOrder("CONFIRMADO")}
-        >
-          Confirmar
-        </button>
-        <button
-          className={styles.submitButton}
-          onClick={() => registerOrder("CANCELADO")}
-        >
-          Cancelar
-        </button>
-      </div>
+      {(itensCarrinho == null || itensCarrinho.length === 0)&&(
+      <div className={styles.subtitle}>Você ainda não colocou nenhum item no carrinho!</div>)}
+      {(itensCarrinho !== null && itensCarrinho.length !== 0)&&(
+        <div className={styles.body}>
+          <table className={styles.table}>
+            <tbody>
+              {itensCarrinho.map((item, index) => (
+                <tr key={index}>
+                  <td className={styles.td}>{item}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className={styles.p}>
+            <strong>Total:</strong> R${localStorage.getItem("TotalPedido")}
+          </p>
+          <div className={styles.buttonContainer}>
+            <button
+              className={styles.submitButton}
+              onClick={() => registerOrder("CONFIRMADO")}
+            >
+              Confirmar
+            </button>
+            <button
+              className={styles.submitButton}
+              onClick={() => registerOrder("CANCELADO")}
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

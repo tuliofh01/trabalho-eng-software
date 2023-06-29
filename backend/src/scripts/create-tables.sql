@@ -37,7 +37,8 @@ create table PEDIDO (
 	CPF text,
 	STATUSPEDIDO text,
 	IDENDERECO integer,
-	VALOR numeric,
+	VALORTOTAL numeric,
+	DATAHORA date,
 	
 	foreign key (IDENDERECO)
 	references ENDERECO (ID)

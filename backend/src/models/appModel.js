@@ -214,15 +214,28 @@ function setItemPedido(idPedido, idItem, qtde){
   db.close();
 }
 
-function setPedido(cpf, endereco, valor, status){
+function getPedidosUsuario(cpf)
+{
+  const dbPath = path.resolve(__dirname, "../assets/database.db");
+  const db = new Database(dbPath);
+
+  const rows = db.prepare(
+      `SELECT * FROM PEDIDO WHERE CPF = '${cpf}'`
+    ).all();
+
+  return rows;
+
+}
+
+function setPedido(data){
   const dbPath = path.resolve(__dirname, "../assets/database.db");
   const db = new Database(dbPath);
   // Prepare the INSERT statement
   const insertStmt = db.prepare(
-    "INSERT INTO PEDIDO (CPF, IDENDERECO, VALOR, STATUSPEDIDO) VALUES (?, ?, ?, ?)"
+    "INSERT INTO PEDIDO (CPF, IDENDERECO, VALORTOTAL, STATUSPEDIDO, DATAHORA) VALUES (?, ?, ?, ?, ?)"
   );
   // Execute the INSERT statement
-  const result = insertStmt.run(cpf, endereco, valor, status);
+  const result = insertStmt.run(data.cpf, data.endereco, data.valor, data.status, data.dataHora);
 
   // Close the database connection
   db.close();
@@ -235,7 +248,7 @@ function getUserData(username){
   const dbPath = path.resolve(__dirname, "../assets/database.db");
   const db = new Database(dbPath);
   const query = `SELECT * FROM USUARIO WHERE EMAIL = '${email}'`;
-  let rows = db.prepare(query).all();
+  let rows = db.prepare(query).get();
   return rows;
 }
 
@@ -258,5 +271,6 @@ module.exports = {
   insertNewPizzaPersonalizada: insertNewPizzaPersonalizada,
   setItemPedido: setItemPedido,
   getUserData: getUserData,
+  getPedidosUsuario: getPedidosUsuario,
   setPedido: setPedido
 }

@@ -14,7 +14,8 @@ function Header() {
         <p className={styles.link} onClick={() => navigate("/cardapio")}>
           Menu
         </p>
-        <p className={styles.link}>Meus pedidos</p>
+        <p className={styles.link} onClick={() => navigate("/meusPedidos")}>
+          Meus pedidos</p>
         <p className={styles.link} onClick={() => navigate("/carrinho")}>
           Carrinho
         </p>

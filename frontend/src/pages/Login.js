@@ -10,6 +10,8 @@ function Login(){
     
     const usernameRef = useRef();
     const passwordRef = useRef();
+
+    localStorage.clear();
     
     function handleLogin(event){
       event.preventDefault();
@@ -23,7 +25,9 @@ function Login(){
           password: password,
         })
         .then((response) => {
-          localStorage.setItem("token", response.data);
+          console.log(response.data.userData);
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("userData", JSON.stringify(response.data.userData));
           navigate("/cardapio");
         })
         .catch((error) => {

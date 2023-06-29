@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Cadastro from './pages/Cadastro';
 import Carrinho from './pages/Carrinho';
 import Perfil from './pages/Perfil';
+import MeusPedidos from './pages/MeusPedidos';
 import "./App.css";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/carrinho" element={<Carrinho />} />
           <Route path="/cardapio" element={<Cardapio />} />
           <Route path="/criarConta" element={<Cadastro />} />
+          <Route path="/meusPedidos" element={<MeusPedidos />}/>
         </Routes>
       </Router>
     </div>

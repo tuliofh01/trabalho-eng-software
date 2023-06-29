@@ -16,16 +16,23 @@
 }
 
 .subtitle{
-  margin-top: 0px;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #FCDBBD;
-  font-style: italic;
+    margin-top: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #FCDBBD;
+    font-style: italic;
 }
 
 .table {
     background-color: transparent;
     border-collapse: collapse;
-    width: 30%;
+    width: 80%;
+}
+
+.tdhead{
+  padding: 8px;
+    text-align: center;
+    color: #FCDBBD;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .td {
