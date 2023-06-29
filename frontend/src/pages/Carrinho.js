@@ -72,22 +72,37 @@ function Carrinho() {
       const itemId = element.split("-")[1];
       await axios.post("/registerItemOrder", {
         token: localStorage.getItem("token"),
-        idPedido: idPedido,
-        idItem: itemId,
-        qtde: qtde
-      });
-    }
-    if(status === "CONFIRMADO"){
-      alert("Pedido confirmado com sucesso!");
-    } else {
-      alert("Pedido cancelado com sucesso!");
-    }
+        cpf: data.CPF,
+        endereco: Number(data.IDENDERECO),
+        valor: Number(localStorage.getItem("TotalPedido")),
+        statusPedido: status
+      }).then((response) => idPedido = response.data);
 
-    if(localStorage.getItem("ItensPedido") && localStorage.getItem("TotalPedido")){
-      localStorage.removeItem("ItensPedido");
-      localStorage.removeItem("TotalPedido");
-    }
-    navigate("/cardapio")
+      const itemsArrayRaw = localStorage.getItem("ItensPedido").split(";");
+      const itemsArray = [...itemsArrayRaw];
+
+      for (const element of itemsArray) {
+        const qtde = element.split('-')[0]
+        const itemId = element.split("-")[1];
+        await axios.post("/registerItemOrder", {
+          token: localStorage.getItem("token"),
+          idPedido: idPedido,
+          idItem: itemId,
+          qtde: qtde
+        });
+      }
+      if(status === "CONFIRMADO"){
+        alert("Pedido confirmado com sucesso!");
+      } else {
+        alert("Pedido cancelado com sucesso!");
+      }
+
+      if(localStorage.getItem("ItensPedido") && localStorage.getItem("TotalPedido")){
+        localStorage.removeItem("ItensPedido");
+        localStorage.removeItem("TotalPedido");
+      }
+      navigate("/cardapio")
+    } 
   }
 
   return (

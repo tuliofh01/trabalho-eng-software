@@ -122,6 +122,7 @@ function ModalPizzaPersonalizada(props) {
           ref={quantidadeRef}
           type="number"
           min="1"
+          defaultValue={0}
           placeholder="Quantidade de itens"
         />
         <button className="modalClose" onClick={shoppingCartHandler}>
