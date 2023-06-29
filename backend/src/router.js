@@ -77,8 +77,9 @@ router.post("/registerOrder", verifyToken, (req, res) => {
     cpf: req.body.cpf,
     endereco: req.body.endereco,
     valor: req.body.valor,
+    status: req.body.statusPedido,
   };
-  const idPedido = appModel.setPedido(data.cpf, data.endereco, data.valor);
+  const idPedido = appModel.setPedido(data.cpf, data.endereco, data.valor, data.status);
   res.status(200).send(`${idPedido}`);
 })
 

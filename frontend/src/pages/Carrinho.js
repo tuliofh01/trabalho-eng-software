@@ -17,37 +17,43 @@ function Carrinho() {
   }, []);
 
   async function shoppingCartTable() {
-    const itemsArrayRaw = localStorage.getItem("ItensPedido").split(";");
-    const itemsArray = [...itemsArrayRaw];
+    try{
+      const itemsArrayRaw = localStorage.getItem("ItensPedido").split(";");
+      const itemsArray = [...itemsArrayRaw];
 
-    const itemPromises = itemsArray.map(async (item) => {
+      const itemPromises = itemsArray.map(async (item) => {
       const itemProps = item.split("-");
       const itemAmount = itemProps[0];
       const itemId = itemProps[1];
 
-      const response = await axios.post("/getItemDescription", { id: itemId });
+      const response = await axios.post("/getItemDescription", {
+        id: itemId,
+      });
       const itemDescription = response.data;
 
       return itemAmount + " - " + itemDescription;
     });
-
-    const updatedItems = await Promise.all(itemPromises);
-    setItensCarrinho(updatedItems);
+      const updatedItems = await Promise.all(itemPromises);
+      setItensCarrinho(updatedItems);
+    } catch (error){
+      console.log(error);
+    }
+    
   }
 
-  async function confirmOrder(){
+  async function registerOrder(status){
     let data;
     await axios.post("/getUserData", {
       token: localStorage.getItem("token")
     }).then((response) => data = response.data[0])
-    console.log(data)
     
     let idPedido;
     await axios.post("/registerOrder", {
       token: localStorage.getItem("token"),
       cpf: data.CPF,
       endereco: Number(data.IDENDERECO),
-      valor: Number(localStorage.getItem("TotalPedido"))
+      valor: Number(localStorage.getItem("TotalPedido")),
+      statusPedido: status
     }).then((response) => idPedido = response.data);
 
     const itemsArrayRaw = localStorage.getItem("ItensPedido").split(";");
@@ -63,7 +69,17 @@ function Carrinho() {
         qtde: qtde
       });
     }
-    alert("Pedido confirmado com sucesso!");
+    if(status === "CONFIRMADO"){
+      alert("Pedido confirmado com sucesso!");
+    } else {
+      alert("Pedido cancelado com sucesso!");
+    }
+
+    if(localStorage.getItem("ItensPedido") && localStorage.getItem("TotalPedido")){
+      localStorage.removeItem("ItensPedido");
+      localStorage.removeItem("TotalPedido");
+    }
+    navigate("/cardapio")
   }
 
   return (
@@ -82,7 +98,20 @@ function Carrinho() {
       <p className={styles.p}>
         <strong>Total:</strong> R${localStorage.getItem("TotalPedido")}
       </p>
-      <button className={styles.submitButton} onClick={confirmOrder}>Confirmar</button>
+      <div className={styles.buttonContainer}>
+        <button
+          className={styles.submitButton}
+          onClick={() => registerOrder("CONFIRMADO")}
+        >
+          Confirmar
+        </button>
+        <button
+          className={styles.submitButton}
+          onClick={() => registerOrder("CANCELADO")}
+        >
+          Cancelar
+        </button>
+      </div>
     </div>
   );
 }

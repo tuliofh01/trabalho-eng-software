@@ -85,7 +85,7 @@ create table ITEMPEDIDO (
 		ON UPDATE NO ACTION,
 		
 	foreign key (IDITEM)
-	references ITEM_CARDAPIO(ID)
+	references ITEMCARDAPIO(ID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )

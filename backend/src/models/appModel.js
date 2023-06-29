@@ -214,15 +214,15 @@ function setItemPedido(idPedido, idItem, qtde){
   db.close();
 }
 
-function setPedido(cpf, endereco, valor){
+function setPedido(cpf, endereco, valor, status){
   const dbPath = path.resolve(__dirname, "../assets/database.db");
   const db = new Database(dbPath);
   // Prepare the INSERT statement
   const insertStmt = db.prepare(
-    "INSERT INTO PEDIDO (CPF, IDENDERECO, VALOR) VALUES (?, ?, ?)"
+    "INSERT INTO PEDIDO (CPF, IDENDERECO, VALOR, STATUSPEDIDO) VALUES (?, ?, ?, ?)"
   );
   // Execute the INSERT statement
-  const result = insertStmt.run(cpf, endereco, valor);
+  const result = insertStmt.run(cpf, endereco, valor, status);
 
   // Close the database connection
   db.close();

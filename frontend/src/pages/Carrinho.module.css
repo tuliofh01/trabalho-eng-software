@@ -37,7 +37,8 @@
 }
 
 .submitButton {
-  width: 100%;
+  margin: 0 auto;
+  width: 300px;
   padding: 10px;
   border: none;
   border-radius: 5px;
@@ -47,6 +48,7 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-top: 5px;
+  margin: 5px 5px;
 }
 
 .submitButton:hover {
@@ -55,4 +57,11 @@
 
 .submitButton:focus {
   outline: none;
+}
+
+.buttonContainer{
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
 }
