@@ -10,6 +10,7 @@ import pizzaPersonalizada from '../assets/pizzas/pizzaPersonalizada.png'
 
 function Index(){
 
+    const [itensMaisPedidos, setItensMaisPedidos] = useState([]);
     const [itensPizza, setItensPizza] = useState([]);
     const [itensBebida, setItensBebida] = useState([]);
     const [itensCombo, setItensCombo] = useState([]);
@@ -20,6 +21,11 @@ function Index(){
         if (!localStorage.getItem("token")) {
           navigate("/");
         }
+
+        axios.get("http://localhost:3333/getItensMaisPedidos").then((response) =>
+        {
+          setItensMaisPedidos(response.data.slice(0,6));  
+        });
 
         axios.get("http://localhost:3333/getCombos").then((response) =>
         {
@@ -43,11 +49,23 @@ function Index(){
         <Header />
         <h1 className={styles.title}>Menu</h1>
 
+        <h2 className={styles.subtitle}>Mais pedidos</h2>
+        <ContainerCardapio>
+          {itensMaisPedidos.map((item) => (
+            <ItemCardapio
+            id={item.ID}
+            image={item.IMAGEM_PATH}
+            description={item.DESCRICAO}
+            price={item.VALOR}
+            />
+          ))}
+        </ContainerCardapio>
+
         <h2 className={styles.subtitle}>Combos</h2>
         <ContainerCardapio>
           {itensCombo.map((item) => (
             <ItemCardapio
-            key={item.ID}
+            id={item.ID}
             image={item.IMAGEM_PATH}
             description={item.DESCRICAO}
             price={item.VALOR}
@@ -65,7 +83,7 @@ function Index(){
 
           {itensPizza.map((item) => (
             <ItemCardapio
-            key={item.ID}
+            id={item.ID}
             image={item.IMAGEM_PATH}
             description={item.DESCRICAO}
             price={item.VALOR}
@@ -77,7 +95,7 @@ function Index(){
         <ContainerCardapio>
           {itensBebida.map((item) => (
             <ItemCardapio
-            key={item.ID}
+            id={item.ID}
             image={item.IMAGEM_PATH}
             description={item.DESCRICAO}
             price={item.VALOR}

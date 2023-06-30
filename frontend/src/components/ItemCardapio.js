@@ -22,6 +22,7 @@ function ItemCardapio(props){
         <p className={styles.price}>R$ {props.price}</p>
         {isModalOpen && (
           <ModalPizzaComum
+            id={props.id}
             image={`http://localhost:3333/getImages/${props.description}`}
             description={props.description}
             price={props.price}

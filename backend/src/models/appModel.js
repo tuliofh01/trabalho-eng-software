@@ -99,22 +99,6 @@ function getSaboresPizza()
   return rows;
 }
 
-/*function getCardapio()
-{
-  const dbPath = path.resolve(__dirname, "../assets/database.db");
-  const db = new Database(dbPath);
-
-  const query = `SELECT * FROM ITEMCARDAPIO`;
-  let rows = db.prepare(query).all();
-
-  if (rows.length <= 0) {
-    popularItemCardapio();
-    rows = db.prepare(query).all();
-  }
-
-  return rows;
-}*/
-
 function getItemCardapioImage(descricao)
 {
   const dbPath = path.resolve(__dirname, "../assets/database.db");
@@ -159,20 +143,20 @@ function getBebidas()
   return rows;
 }
 
-function getItemCardapioId(description){
+/*function getItemCardapioId(description){
   const dbPath = path.resolve(__dirname, "../assets/database.db");
   const db = new Database(dbPath);
   const query = `SELECT ID FROM ITEMCARDAPIO WHERE DESCRICAO = '${description}'`;
   let rows = db.prepare(query).all();
   return rows;
-}
+}*/
 
-function getItemCardapioDescription(id){
+function getMenuItem(id){
   const dbPath = path.resolve(__dirname, "../assets/database.db");
   const db = new Database(dbPath);
-  const query = `SELECT DESCRICAO FROM ITEMCARDAPIO WHERE ID = '${id}'`;
-  let rows = db.prepare(query).all();
-  return rows;
+  const query = `SELECT * FROM ITEMCARDAPIO WHERE ID = ${id}`;
+  const row = db.prepare(query).get();
+  return row;
 }
 
 function insertNewPizzaPersonalizada(sabor1Id, sabor2Id, valor){
@@ -189,7 +173,7 @@ function insertNewPizzaPersonalizada(sabor1Id, sabor2Id, valor){
   if (row == null)
   {
     const queryInsert = `INSERT INTO ITEMCARDAPIO (DESCRICAO, VALOR, TIPO, IDSABOR1, IDSABOR2)
-    VALUES (?, ?, ?, ?, ?)`;
+                         VALUES (?, ?, ?, ?, ?)`;
 
     const info = db.prepare(queryInsert).run(`Pizza Dois Sabores de ${sabor1Desc} + ${sabor2Desc}`, valor, 'Pizza', sabor1Id, sabor2Id);
     row = db.prepare(`SELECT * FROM ITEMCARDAPIO WHERE ID = ${info.lastInsertRowid}`).get();
@@ -198,20 +182,36 @@ function insertNewPizzaPersonalizada(sabor1Id, sabor2Id, valor){
   return row;
 }
 
-function setItemPedido(idPedido, idItem, qtde){
+function registerItemOrder(idPedido, idItem, qtde){
   const dbPath = path.resolve(__dirname, "../assets/database.db");
   const db = new Database(dbPath);
-  // Prepare the INSERT statement
-  const insertStmt = db.prepare(
-    "INSERT INTO ITEMPEDIDO (IDPEDIDO, IDITEM, QUANTIDADE) VALUES (?, ?, ?)"
-  );
-  const idDoPedido = Number(idPedido);
-  const idDoItem = Number(idItem);
-  const quantidade = Number(qtde);
-  // Execute the INSERT statement
-  insertStmt.run(idDoPedido, idDoItem, quantidade);
-  // Close the database connection
+  let result;
+
+
+  //Primeiro, verificar se o item já se encontra na base para o ID do pedido
+  const selectQuery = `select * from ITEMPEDIDO where IDPEDIDO = ${idPedido} and IDITEM = ${idItem}`;
+  const row = db.prepare(selectQuery).get();
+
+  if (row == null)
+  {
+    // Prepare the INSERT statement
+    const insertStmt = db.prepare(
+      "INSERT INTO ITEMPEDIDO (IDPEDIDO, IDITEM, QUANTIDADE) VALUES (?, ?, ?)"
+    );
+    const idDoPedido = Number(idPedido);
+    const idDoItem = Number(idItem);
+    const quantidade = Number(qtde);
+    // Execute the INSERT statement
+    result = insertStmt.run(idDoPedido, idDoItem, quantidade);
+    // Close the database connection
+
+  } else {
+    const updateQuery = `update ITEMPEDIDO set QUANTIDADE = ? where IDPEDIDO = ? AND IDITEM = ?`;
+    result = db.prepare(updateQuery).run(Number(row.QUANTIDADE) + Number(qtde), idPedido, idItem);    
+  }
+
   db.close();
+  return result;
 }
 
 function getPedidosUsuario(cpf)
@@ -225,6 +225,26 @@ function getPedidosUsuario(cpf)
 
   return rows;
 
+}
+
+function getOrderItems(idPedido)
+{
+  const dbPath = path.resolve(__dirname, "../assets/database.db");
+  const db = new Database(dbPath);
+
+  const rows = db.prepare(
+      `SELECT * FROM ITEMPEDIDO WHERE IDPEDIDO = '${idPedido}'`
+    ).all();
+
+  return rows;
+}
+
+function getCartOrderItems(cpf)
+{
+  const order = getOrderCart(cpf);
+  const rows = getOrderItems(order.ID);
+
+  return rows;
 }
 
 function setPedido(data){
@@ -243,6 +263,25 @@ function setPedido(data){
   return result.lastInsertRowid;
 }
 
+function registerOrder(data){
+  const dbPath = path.resolve(__dirname, "../assets/database.db");
+  const db = new Database(dbPath);
+
+  console.log(data);
+  
+  const updateStmt = db.prepare(
+    `UPDATE PEDIDO SET CPF = ?, IDENDERECO = ?, STATUSPEDIDO = ?, DATAHORA = ?
+     where ID = ?`
+  );
+
+  const result = updateStmt.run(data.cpf, data.endereco, data.status, data.dataHora, data.id);
+
+  // Close the database connection
+  db.close();
+
+  return result;
+}
+
 function getUserData(username){
   const email = username;
   const dbPath = path.resolve(__dirname, "../assets/database.db");
@@ -252,6 +291,53 @@ function getUserData(username){
   return rows;
 }
 
+function getUserDataCPF(cpf){
+  const dbPath = path.resolve(__dirname, "../assets/database.db");
+  const db = new Database(dbPath);
+  const query = `SELECT * FROM USUARIO WHERE CPF = '${cpf}'`;
+  const row = db.prepare(query).get();
+  return row;
+}
+
+function getItensMaisPedidos(){
+  const dbPath = path.resolve(__dirname, "../assets/database.db");
+  const db = new Database(dbPath);
+
+  const query = `select * from ITEMCARDAPIO 
+                 left join ITEMPEDIDO on ITEMCARDAPIO.ID = ITEMPEDIDO.IDITEM
+                 group by ITEMCARDAPIO.ID order by sum(QUANTIDADE) desc;`;
+
+  const rows = db.prepare(query).all();
+
+  return(rows);
+}
+
+function createCartOrder(cpf)
+{
+  const dbPath = path.resolve(__dirname, "../assets/database.db");
+  const db = new Database(dbPath);
+  const endereco = getUserDataCPF(cpf).IDENDERECO;
+  const queryInsert = `insert into PEDIDO (CPF, STATUSPEDIDO, IDENDERECO)
+                       values ('${cpf}', 'NÃO CONCLUÍDO', '${endereco}')`;
+
+  const info = db.prepare(queryInsert).run();
+  row = db.prepare(`SELECT * FROM ITEMCARDAPIO WHERE ID = ${info.lastInsertRowid}`).get();       
+  console.log("createCartOrder");  
+  console.log(row);     
+  return row;
+}
+
+function getCartOrder(cpf)
+{
+  const dbPath = path.resolve(__dirname, "../assets/database.db");
+  const db = new Database(dbPath);
+  const query = `select * from PEDIDO where CPF = ${cpf} and STATUSPEDIDO = 'NÃO CONCLUÍDO'`;
+
+  let row = db.prepare(query).get();
+  console.log("getCartOrder");  
+  console.log(row);    
+  return row;
+}
 
 module.exports = {
   criarConta: criarConta,
@@ -266,11 +352,16 @@ module.exports = {
   getBebidas: getBebidas,
   getSaboresPizza: getSaboresPizza,
   getItemCardapioImage: getItemCardapioImage,
-  getItemCardapioId: getItemCardapioId,
-  getItemCardapioDescription: getItemCardapioDescription,
   insertNewPizzaPersonalizada: insertNewPizzaPersonalizada,
-  setItemPedido: setItemPedido,
+  registerItemOrder: registerItemOrder,
   getUserData: getUserData,
   getPedidosUsuario: getPedidosUsuario,
-  setPedido: setPedido
+  setPedido: setPedido,
+  getItensMaisPedidos: getItensMaisPedidos,
+  createCartOrder: createCartOrder,
+  getCartOrder: getCartOrder,
+  getOrderItems: getOrderItems,
+  getUserDataCPF: getUserDataCPF,
+  registerOrder: registerOrder,
+  getMenuItem: getMenuItem
 }

@@ -65,24 +65,25 @@ router.post("/createAddress", async (req, res) => {
 
 router.post("/registerItemOrder", verifyToken, (req, res) => {
   const data = {
-    idPedido: req.body.idPedido,
+    idPedido: req.body.idOrderCart,
     idItem: req.body.idItem,
     qtde: req.body.qtde
   }
-  appModel.setItemPedido(data.idPedido, data.idItem, data.qtde);
-  res.status(200).send("ok!")
+
+  const result = appModel.registerItemOrder(data.idPedido, data.idItem, data.qtde);
+  res.status(200).send(result)
 });
 
 router.post("/registerOrder", verifyToken, (req, res) => {
   const data = {
+    id: req.body.idPedido,
     cpf: req.body.cpf,
     endereco: req.body.endereco,
-    valor: req.body.valor,
     status: req.body.statusPedido,
     dataHora: req.body.dataHora
   };
-  const idPedido = appModel.setPedido(data);
-  res.status(200).send(`${idPedido}`);
+  const result = appModel.registerOrder(data);
+  res.status(200).send(result);
 })
 
 router.post("/getUserData", verifyToken, (req, res) => {
@@ -132,23 +133,30 @@ router.get("/getBebidas", (req, res) => {
   res.status(200).json(bebidas);
 });
 
+router.get("/getItensMaisPedidos", (req, res) => {
+  const itens = appModel.getItensMaisPedidos();
+  res.status(200).json(itens);
+});
+
+
 router.get('/getImages/:nome', function (req, res) {
   const index = appModel.getItemCardapioImage(req.params.nome);
   res.sendFile(path.resolve(index));
 });
 
-router.post('/getItemId', function (req, res){ 
-  const productDescription = req.body.descricao;
-  const productId = appModel.getItemCardapioId(productDescription)[0]["ID"];
-  res.status(200).send(`${productId}`);
+router.post('/getMenuItem', function (req, res){ 
+  const menuItem = appModel.getMenuItem(req.body.id);
+  res.status(200).send(menuItem);
 });
+
+/*
 
 router.post('/getItemDescription', function (req, res){
   const productId = req.body.id;
   const productDescription = appModel.getItemCardapioDescription(productId)[0]["DESCRICAO"];
   res.status(200).send(productDescription);
 });
-
+*/
 router.post('/insertNewPizzaPersonalizada', function (req, res)
 {
   const newPizza = appModel.insertNewPizzaPersonalizada(req.body.sabor1Id, req.body.sabor2Id, req.body.price);
@@ -160,6 +168,26 @@ router.post('/getPedidosUsuario', function (req, res)
   const pedidos = appModel.getPedidosUsuario(req.body.cpf);
   res.status(200).send(pedidos);
 });
+
+router.post('/createCartOrder', function (req, res)
+{
+  const cartOrder = appModel.createCartOrder(req.body.cpf);
+  res.status(200).send(cartOrder);
+});
+
+
+router.post('/getCartOrder', function (req, res)
+{
+  const cartOrder = appModel.getCartOrder(req.body.cpf);
+  res.status(200).send(cartOrder);
+});
+
+router.post('/getOrderItems', function (req, res)
+{
+  const orderItems = appModel.getOrderItems(req.body.id);
+  res.status(200).send(orderItems);
+});
+
 
 
 module.exports = router;
