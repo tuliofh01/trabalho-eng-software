@@ -161,5 +161,18 @@ router.post('/getPedidosUsuario', function (req, res)
   res.status(200).send(pedidos);
 });
 
+router.post("/setUserData", function(req, res) {
+  appModel.setUserData(req.body.data);
+  res.status(200).send("OK!");
+})
+
+router.post("/setAddressData", function (req, res) {
+  appModel.setAddressData(req.body.data);
+  res.status(200).send("OK!");
+});
+
+router.post("getNeighborhoodId", function (req, res){
+  
+})
 
 module.exports = router;

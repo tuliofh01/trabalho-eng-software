@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import styles from './Perfil.module.css'
-import Header from "../components/Header"
+import styles from "./Perfil.module.css";
+import Header from "../components/Header";
 
 function Perfil() {
   const [dadosPerfil, setDadosPerfil] = useState([]);
   const [dadosEndereco, setDadosEndereco] = useState([]);
   const [dadosBairro, setDadosBairro] = useState([]);
+  const [dadosEnderecoRaw, setDadosEnderecoRaw] = useState([]);
   const [status, setStatus] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [bairros, setBairros] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,6 +34,7 @@ function Perfil() {
             id: response.data[0].IDENDERECO,
           }
         );
+        setDadosEnderecoRaw(addressResponse.data)
 
         const neighbourhoodResponde = await axios.post(
           "http://localhost:3333/getNeighborhoodData",
@@ -46,14 +49,14 @@ function Perfil() {
 
         arrayPerfil.push(response.data[0]);
         arrayEndereco.push(addressResponse.data[0]);
-        arrayBairro.push(neighbourhoodResponde.data[0])
-
-        console.log(response.data[0]);
+        arrayBairro.push(neighbourhoodResponde.data[0]);
 
         setStatus(true);
         setDadosPerfil(arrayPerfil);
         setDadosEndereco(arrayEndereco);
         setDadosBairro(arrayBairro);
+
+        console.log(addressResponse.data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -62,24 +65,129 @@ function Perfil() {
     })();
   }, []);
 
+  useEffect(() => {
+    // Fetch neighborhoods data
+    axios
+      .get("http://localhost:3333/getNeighborhoods")
+      .then((response) => {
+        setBairros(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  const cpfRef = useRef(null);
+  const nomeRef = useRef(null);
+  const telefoneRef = useRef(null);
+  const emailRef = useRef(null);
+  const logradouroRef = useRef(null);
+  const bairroRef = useRef(null);
+  const cepRef = useRef(null);
+
+  const formHandler = (event) => {
+    event.preventDefault();
+    
+    
+    const formData = {
+      cpf: cpfRef.current.value,
+      nome: nomeRef.current.value,
+      telefone: telefoneRef.current.value,
+      email: emailRef.current.value,
+      idEndereco: dadosEndereco[0].ID,
+      logradouro: logradouroRef.current.value,
+      idBairro: bairroRef.current.value,
+      cep: cepRef.current.value,
+    };
+
+    axios.post("/setUserData", {
+      data: formData
+    })
+
+    console.log(formData);
+  };
+
   return (
     <div>
       {loading ? (
         <div>Loading...</div>
       ) : (
         <div className={styles.container}>
-          <Header/>
-          <div className={styles.dataContainer}>
+          <Header />
+          <form className={styles.dataContainer} onSubmit={formHandler}>
             <h2>Dados Pessoais</h2>
-            <p><strong>CPF: </strong>{status && dadosPerfil[0].CPF}</p>
-            <p><strong>Nome: </strong>{status && dadosPerfil[0].NOME}</p>
-            <p><strong>Telefone: </strong>{status && dadosPerfil[0].TELEFONE}</p>
-            <p><strong>E-mail: </strong>{status && dadosPerfil[0].EMAIL}</p>
+            <div className={styles.inputGroup}>
+              <label htmlFor="cpf">CPF</label>
+              <input
+                type="text"
+                id="cpf"
+                defaultValue={status ? dadosPerfil[0].CPF : ""}
+                ref={cpfRef}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <label htmlFor="nome">Nome</label>
+              <input
+                type="text"
+                id="nome"
+                defaultValue={status ? dadosPerfil[0].NOME : ""}
+                ref={nomeRef}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <label htmlFor="telefone">Telefone</label>
+              <input
+                type="text"
+                id="telefone"
+                defaultValue={status ? dadosPerfil[0].TELEFONE : ""}
+                ref={telefoneRef}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <label htmlFor="email">E-mail</label>
+              <input
+                type="text"
+                id="email"
+                defaultValue={status ? dadosPerfil[0].EMAIL : ""}
+                ref={emailRef}
+              />
+            </div>
             <h2>Endereço</h2>
-            <p><strong>Logradouro: </strong>{status && dadosEndereco[0].LOGRADOURO}</p>
-            <p><strong>Bairro: </strong>{status && dadosBairro[0].NOME}</p>
-            <p><strong>CEP: </strong>{status && dadosEndereco[0].CEP}</p>
-          </div>
+            <div className={styles.inputGroup}>
+              <label htmlFor="logradouro">Logradouro</label>
+              <input
+                type="text"
+                id="logradouro"
+                defaultValue={status ? dadosEndereco[0].LOGRADOURO : ""}
+                ref={logradouroRef}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <label htmlFor="bairro">Bairro</label>
+              <select
+                className={styles.inputField}
+                placeholder="Bairro"
+                defaultValue={status ? dadosBairro[0].NOME : ""}
+                ref={bairroRef}
+              >
+                {bairros.map((nome) => (
+                  <option key={nome} value={nome}>
+                    {nome}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className={styles.inputGroup}>
+              <label htmlFor="cep">CEP</label>
+              <input
+                type="text"
+                id="cep"
+                defaultValue={status ? dadosEndereco[0].CEP : ""}
+                ref={cepRef}
+              />
+            </div>
+            <button type="submit">Submit</button>
+          </form>
         </div>
       )}
     </div>

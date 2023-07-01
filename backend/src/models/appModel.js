@@ -252,6 +252,39 @@ function getUserData(username){
   return rows;
 }
 
+function setUserData(data){
+  const dbPath = path.resolve(__dirname, "../assets/database.db");
+  const db = new Database(dbPath);
+  // Prepare the INSERT statement
+  const insertStmt = db.prepare(
+    "UPDATE USUARIO SET CPF = ?, NOME = ?, TELEFONE = ? WHERE EMAIL = ?"
+  );
+  // Execute the INSERT statement
+  const result = insertStmt.run(
+    data.cpf,
+    data.nome,
+    data.telefone,
+    data.email
+  );
+
+  // Close the database connection
+  db.close();
+}
+
+function setAddressData(data){
+  const dbPath = path.resolve(__dirname, "../assets/database.db");
+  const db = new Database(dbPath);
+  // Prepare the INSERT statement
+  const insertStmt = db.prepare(
+    "UPDATE ENDERECO SET CEP = ?, IDBAIRRO = ?, LOGRADOURO = ? WHERE ID = ?"
+  );
+  // Execute the INSERT statement
+  const result = insertStmt.run(data.cep, data.idBairro, data.logradouro, data.idEndereco);
+
+  // Close the database connection
+  db.close();
+}
+
 
 module.exports = {
   criarConta: criarConta,
@@ -272,5 +305,7 @@ module.exports = {
   setItemPedido: setItemPedido,
   getUserData: getUserData,
   getPedidosUsuario: getPedidosUsuario,
-  setPedido: setPedido
+  setPedido: setPedido,
+  setUserData: setUserData,
+  setAddressData: setAddressData
 }
