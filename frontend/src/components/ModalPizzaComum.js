@@ -13,52 +13,44 @@ function ModalPizzaComum(props){
   };
 
   async function shoppingCartHandler() {
-    let idItemCarrinho;
-    await axios
-      .post("/getItemId", {
-        descricao: props.description,
-      })
-      .then((response) => {
-        idItemCarrinho = response.data;
 
-        const itemsArray = localStorage.getItem("ItensPedido");
-        const totalPrice = localStorage.getItem("TotalPedido");
+    let idItemCarrinho = props.id;
+    let idPedidoCarrinho;
 
-        // Sets purchased items by ID
-        if (itemsArray) {
-          localStorage.setItem(
-            "ItensPedido",
-            itemsArray +
-              ";" +
-              quantidadeRef.current.value +
-              "-" +
-              idItemCarrinho
-          );
-        } else {
-          localStorage.setItem(
-            "ItensPedido",
-            quantidadeRef.current.value + "-" + idItemCarrinho
-          );
-        }
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    
+     // Procura por pedido não concluido na tabela de pedidos para o usuário (equivalente ao carrinho)
 
-        // Sets total price
-        if (totalPrice) {
-          localStorage.setItem(
-            "TotalPedido",
-            String(
-              Number(totalPrice) +
-                Number(props.price) * Number(quantidadeRef.current.value)
-            )
-          );
-        } else {
-          localStorage.setItem(
-            "TotalPedido",
-            String(Number(props.price) * Number(quantidadeRef.current.value))
-          );
-        }
-
-        alert("Carrinho atualizado!");
+    let response = await axios
+      .post("http://localhost:3333/getCartOrder", {
+        cpf: userData.CPF
       });
+
+    console.log(response.data);
+
+    if (response == null || response.data == null || response.data === "") {
+      response = await axios
+      .post("http://localhost:3333/createCartOrder", {
+        cpf: userData.CPF
+      });
+    }
+
+    console.log(response);
+    idPedidoCarrinho = response.data.ID;
+    
+    if (idPedidoCarrinho !== null)  {
+      await axios
+        .post("http://localhost:3333/registerItemOrder", {
+          token: localStorage.getItem("token"),
+          idItem: idItemCarrinho,
+          idOrderCart: idPedidoCarrinho,
+          qtde: quantidadeRef.current.value
+        });
+    } else {
+      alert("ERRO: Não foi possível adicionar ao carrinho!");
+    }
+
+    alert("Carrinho atualizado!");
   }
 
   return (
@@ -72,7 +64,7 @@ function ModalPizzaComum(props){
           ref={quantidadeRef}
           type="number"
           min="1"
-          defaultValue={0}
+          defaultValue={1}
           placeholder="Quantidade de itens"
         />
         <button className="modalClose" onClick={shoppingCartHandler}>

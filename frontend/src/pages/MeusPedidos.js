@@ -34,6 +34,7 @@ return (
       {(pedidosUsuario !== null && pedidosUsuario.length !== 0) &&
       (
       <table className={styles.table}>
+        <thead>
         <tr>
             <td className={styles.tdhead}>Nº do Pedido</td>
             <td className={styles.tdhead}>Data e hora</td>
@@ -41,6 +42,8 @@ return (
             <td className={styles.tdhead}>Status</td>
             <td className={styles.tdhead}></td>
         </tr>
+        </thead>
+        <tbody>
           {pedidosUsuario.map((item, index) => (
             <tr key={index}>
               <td className={styles.td}>Pedido #{item.ID}</td>
@@ -50,6 +53,7 @@ return (
               <td className={styles.td}></td>
             </tr>
           ))}
+          </tbody>
       </table>
       )}
     </div>

@@ -1,4 +1,4 @@
-create table BAIRRO (
+ create table BAIRRO (
 	ID integer primary key autoincrement,
 	NOME text
 );
@@ -37,7 +37,7 @@ create table PEDIDO (
 	CPF text,
 	STATUSPEDIDO text,
 	IDENDERECO integer,
-	VALORTOTAL numeric,
+	VALORTOTAL numeric default 0,
 	DATAHORA date,
 	
 	foreign key (IDENDERECO)
@@ -56,7 +56,7 @@ insert into SABOR_PIZZA (DESCRICAO) values ('Cheddar'), ('Frango'), ('Milho'), (
 create table ITEMCARDAPIO (
 	ID integer primary key autoincrement,
 	DESCRICAO text,
-	VALOR numeric,
+	VALOR numeric default 0,
 	IMAGEM_PATH text,
 	TIPO text,
 	IDSABOR1 integer,
@@ -90,4 +90,71 @@ create table ITEMPEDIDO (
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
+
+/* DEFINE TRIGGERS */
+
+CREATE TRIGGER IF NOT EXISTS verifica_criacao_cadastro
+BEFORE INSERT ON USUARIO
+BEGIN 
+	SELECT CASE
+		WHEN length(new.SENHA) < 8 THEN 
+			raise (ABORT, 'Senha precisa ser igual ou maior que 8 caracteres!')
+		WHEN length(new.EMAIL) = 0 THEN
+			raise (ABORT, 'O campo "E-mail" é obrigatório!')
+		WHEN length(new.SENHA) = 0 THEN
+			raise (ABORT, 'O campo "Senha" é obrigatório!')
+		WHEN length(new.CPF) = 0 THEN
+			raise (ABORT, 'O campo "CPF" é obrigatório!')
+	END;
+END;
+
+CREATE TRIGGER IF NOT EXISTS verifica_alteracao_cadastro
+BEFORE UPDATE ON USUARIO
+BEGIN 
+	SELECT CASE
+		WHEN length(new.SENHA) < 8 THEN 
+			raise (ABORT, 'Senha precisa ser igual ou maior que 8 caracteres!')
+		END;
+END;
+
+CREATE TRIGGER IF NOT EXISTS verifica_pizza_doissabores
+BEFORE INSERT ON ITEMCARDAPIO
+BEGIN 
+	SELECT CASE
+		WHEN new.IDSABOR1 = new.IDSABOR2 THEN 
+			raise (ABORT, 'Os dois sabores da pizza não podem ser iguais!')
+		END;
+END;
+
+CREATE TRIGGER IF NOT EXISTS update_valor_total_pedido_oninsert
+AFTER INSERT ON ITEMPEDIDO
+BEGIN 
+	UPDATE PEDIDO
+	SET VALORTOTAL = (VALORTOTAL + 
+					 ((SELECT VALOR FROM ITEMCARDAPIO IC WHERE IC.ID = new.IDITEM) * new.QUANTIDADE))
+	WHERE new.IDPEDIDO = PEDIDO.ID;
+END;
+
+CREATE TRIGGER IF NOT EXISTS update_valor_total_pedido_onupdate
+AFTER UPDATE ON ITEMPEDIDO
+BEGIN 
+	UPDATE PEDIDO
+	SET VALORTOTAL = (VALORTOTAL
+					  - ((SELECT VALOR FROM ITEMCARDAPIO IC WHERE IC.ID = new.IDITEM) * old.QUANTIDADE)
+					  + ((SELECT VALOR FROM ITEMCARDAPIO IC WHERE IC.ID = new.IDITEM) * new.QUANTIDADE))
+	WHERE new.IDPEDIDO = PEDIDO.ID;
+END;
+
+CREATE TRIGGER IF NOT EXISTS valida_quantidade_itempedido
+BEFORE INSERT ON ITEMPEDIDO
+BEGIN 
+	SELECT CASE
+		WHEN new.QUANTIDADE < 1 THEN 
+			raise (ABORT, 'A quantidade do item não pode ser menor que 1!')
+		END;
+END;
+
+
+
+
 

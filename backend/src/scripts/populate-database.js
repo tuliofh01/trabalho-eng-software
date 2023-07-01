@@ -50,6 +50,8 @@ function populateDatabase()
          (18, 'Combo 5 - 2 Pizzas Frango e Pepperoni + 1 Guaraná', 130, 'Combo', '../frontend/src/assets/combos/combo5.png')`;
 
   db.prepare(queryCombos).run();
+
+  db.prepare(`UPDATE SQLITE_SEQUENCE SET seq = 18 WHERE name = 'ITEMCARDAPIO'`).run();
 }
 
 populateDatabase();
