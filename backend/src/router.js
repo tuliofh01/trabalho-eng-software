@@ -104,12 +104,12 @@ router.post("/getProfileData", verifyToken, (req, res) => {
 });
 
 router.post("/getAddressData", (req, res) => {
-  const dados = appModel.getEndereco(req.body.id);
+  const dados = appModel.getAddressData(req.body.id);
   res.status(200).json(dados);
 })
 
 router.post("/getNeighborhoodData", (req, res) => {
-  const dados = appModel.getBairro(req.body.id);
+  const dados = appModel.getNeighborhoodData(req.body.id);
   res.status(200).json(dados);
 });
 
@@ -150,17 +150,9 @@ router.post('/getMenuItem', function (req, res){
   res.status(200).send(menuItem);
 });
 
-/*
-
-router.post('/getItemDescription', function (req, res){
-  const productId = req.body.id;
-  const productDescription = appModel.getItemCardapioDescription(productId)[0]["DESCRICAO"];
-  res.status(200).send(productDescription);
-});
-*/
-router.post('/insertNewPizzaPersonalizada', function (req, res)
+router.post('/getDoubleFlavorPizza', function (req, res)
 {
-  const newPizza = appModel.insertNewPizzaPersonalizada(req.body.sabor1Id, req.body.sabor2Id, req.body.price);
+  const newPizza = appModel.getDoubleFlavorPizza(req.body.sabor1Id, req.body.sabor2Id, req.body.price);
   res.status(200).send(newPizza);
 });
 
