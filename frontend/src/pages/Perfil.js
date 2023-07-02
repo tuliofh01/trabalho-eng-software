@@ -34,12 +34,12 @@ function Perfil() {
             id: response.data[0].IDENDERECO,
           }
         );
-        setDadosEnderecoRaw(addressResponse.data)
+        setDadosEnderecoRaw(addressResponse.data);
 
-        const neighbourhoodResponde = await axios.post(
+        const neighbourhoodResponse = await axios.post(
           "http://localhost:3333/getNeighborhoodData",
           {
-            id: addressResponse.data[0].IDBAIRRO,
+            id: addressResponse.data.IDBAIRRO,
           }
         );
 
@@ -48,15 +48,13 @@ function Perfil() {
         const arrayBairro = [];
 
         arrayPerfil.push(response.data[0]);
-        arrayEndereco.push(addressResponse.data[0]);
-        arrayBairro.push(neighbourhoodResponde.data[0]);
+        arrayEndereco.push(addressResponse.data);
+        arrayBairro.push(neighbourhoodResponse.data);
 
         setStatus(true);
         setDadosPerfil(arrayPerfil);
         setDadosEndereco(arrayEndereco);
         setDadosBairro(arrayBairro);
-
-        console.log(addressResponse.data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -85,10 +83,19 @@ function Perfil() {
   const bairroRef = useRef(null);
   const cepRef = useRef(null);
 
-  const formHandler = (event) => {
+  const formHandler = async (event) => {
     event.preventDefault();
-    
-    
+
+    let idBairro;
+    try {
+      const response = await axios.post("/getNeighborhoodId", {
+        nomeBairro: bairroRef.current.value,
+      });
+      idBairro = response.data;
+    } catch (error) {
+      console.error(error);
+    }
+
     const formData = {
       cpf: cpfRef.current.value,
       nome: nomeRef.current.value,
@@ -96,15 +103,23 @@ function Perfil() {
       email: emailRef.current.value,
       idEndereco: dadosEndereco[0].ID,
       logradouro: logradouroRef.current.value,
-      idBairro: bairroRef.current.value,
+      idBairro: idBairro,
       cep: cepRef.current.value,
     };
 
-    axios.post("/setUserData", {
-      data: formData
-    })
+    try {
+      await axios.post("/setUserData", {
+        data: formData,
+      });
 
-    console.log(formData);
+      await axios.post("/setAddressData", {
+        data: formData,
+      });
+
+      alert("Dados atualizados!");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -186,7 +201,7 @@ function Perfil() {
                 ref={cepRef}
               />
             </div>
-            <button type="submit">Submit</button>
+            <button type="submit">Confirmar dados</button>
           </form>
         </div>
       )}

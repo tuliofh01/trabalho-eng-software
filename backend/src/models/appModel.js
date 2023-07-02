@@ -385,6 +385,14 @@ function setAddressData(data){
   db.close();
 }
 
+function getNeighborhoodId(nome){
+  const db = new Database(dbPath);
+  const query = `select ID from BAIRRO where NOME = '${nome}'`;
+  let row = db.prepare(query).get();
+  db.close();
+  return row["ID"];
+}
+
 
 module.exports = {
   createAccount: createAccount,
@@ -412,5 +420,6 @@ module.exports = {
   registerOrder: registerOrder,
   getMenuItem: getMenuItem,
   setUserData: setUserData,
-  setAddressData: setAddressData
+  setAddressData: setAddressData,
+  getNeighborhoodId: getNeighborhoodId
 }

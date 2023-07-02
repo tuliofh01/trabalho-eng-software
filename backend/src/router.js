@@ -192,7 +192,8 @@ router.post("/setAddressData", function (req, res) {
   res.status(200).send("OK!");
 });
 
-router.post("getNeighborhoodId", function (req, res){
+router.post("/getNeighborhoodId", function (req, res){
+  appModel.getNeighborhoodId(req.body.nomeBairro)
   
 })
 
