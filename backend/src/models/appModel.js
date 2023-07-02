@@ -4,6 +4,8 @@ const path = require("path");
 require('dotenv').config();
 const dbPath = path.resolve(__dirname, process.env.DATABASE_PATH);
 
+
+
 function authLogin(user, password) {
   const db = new Database(dbPath);
   const query = `SELECT * FROM USUARIO WHERE EMAIL = '${user}' AND SENHA = '${password}'`;
@@ -76,23 +78,26 @@ function getDadosPerfil(username){
   return rows;
 }
 
-function getEndereco(id){
+function getNeighborhoodData(id) {
   const db = new Database(dbPath);
-  const query = `SELECT * FROM ENDERECO WHERE ID = '${id}'`;
-  const rows = db.prepare(query).all();
+  const query = `SELECT NOME AS NOMEBAIRRO FROM BAIRRO WHERE ID = '${id}'`;
+  const row = db.prepare(query).get();
   db.close();
 
-  return rows;
+  return row;
 }
 
-function getBairro(id) {
+function getAddressData(id){
   const db = new Database(dbPath);
-  const query = `SELECT NOME FROM BAIRRO WHERE ID = '${id}'`;
-  const rows = db.prepare(query).all();
+  const query = `SELECT E.LOGRADOURO, E.NUMERO, B.NOME AS NOMEBAIRRO, E.CEP FROM ENDERECO E
+                 JOIN BAIRRO B ON E.IDBAIRRO = B.ID 
+                 WHERE E.ID = '${id}'`;
+  const row = db.prepare(query).get();
   db.close();
 
-  return rows;
+  return row;
 }
+
 function getSaboresPizza()
 {
   const db = new Database(dbPath);
@@ -157,23 +162,30 @@ function getMenuItem(id){
   return row;
 }
 
-function insertNewPizzaPersonalizada(sabor1Id, sabor2Id, valor){
+function getDoubleFlavorPizza(sabor1Id, sabor2Id, valor){
   const db = new Database(dbPath);
 
   const sabor1Desc = db.prepare(`SELECT DESCRICAO FROM SABOR_PIZZA WHERE ID = ${sabor1Id}`).get()['DESCRICAO'];
   const sabor2Desc = db.prepare(`SELECT DESCRICAO FROM SABOR_PIZZA WHERE ID = ${sabor2Id}`).get()['DESCRICAO'];
 
-  const querySearch = `SELECT * FROM ITEMCARDAPIO WHERE IDSABOR1 = ${sabor1Id} and IDSABOR2 = ${sabor2Id}`;
+  const querySearch = `select * from ITEMCARDAPIO 
+                       where (IDSABOR1 = ${sabor1Id} and IDSABOR2 = ${sabor2Id})
+                       or (IDSABOR2 = ${sabor1Id} and IDSABOR1 = ${sabor2Id})`;
 
   let row = db.prepare(querySearch).get();
 
   if (row == null)
   {
-    const queryInsert = `INSERT INTO ITEMCARDAPIO (DESCRICAO, VALOR, TIPO, IDSABOR1, IDSABOR2)
-                         VALUES (?, ?, ?, ?, ?)`;
+    const queryInsert = `INSERT INTO ITEMCARDAPIO (DESCRICAO, VALOR, TIPO, IDSABOR1, IDSABOR2, IMAGEM_PATH)
+                         VALUES (?, ?, ?, ?, ?, ?)`;
 
-    const info = db.prepare(queryInsert).run(`Pizza Dois Sabores de ${sabor1Desc} + ${sabor2Desc}`, valor, 'Pizza', sabor1Id, sabor2Id);
-    row = db.prepare(`SELECT * FROM ITEMCARDAPIO WHERE ID = ${info.lastInsertRowid}`).get();
+    try {
+      const info = db.prepare(queryInsert).run(`Pizza Dois Sabores de ${sabor1Desc} + ${sabor2Desc}`, valor, 'Pizza', sabor1Id, sabor2Id, '../frontend/src/assets/pizzas/pizzaPersonalizada.png');
+      row = db.prepare(`SELECT * FROM ITEMCARDAPIO WHERE ID = ${info.lastInsertRowid}`).get();
+      
+    } catch(error) {
+      return({code: error["code"], message: error["message"]});
+    }
   }
 
   db.close();
@@ -199,12 +211,21 @@ function registerItemOrder(idPedido, idItem, qtde){
     const idDoItem = Number(idItem);
     const quantidade = Number(qtde);
     // Execute the INSERT statement
-    result = insertStmt.run(idDoPedido, idDoItem, quantidade);
+    try {
+      result = insertStmt.run(idDoPedido, idDoItem, quantidade);
+    } catch (error) {
+      return({code: error["code"], message: error["message"]});
+    }
     // Close the database connection
 
   } else {
     const updateQuery = `update ITEMPEDIDO set QUANTIDADE = ? where IDPEDIDO = ? AND IDITEM = ?`;
-    result = db.prepare(updateQuery).run(Number(row.QUANTIDADE) + Number(qtde), idPedido, idItem);    
+    try {
+      result = db.prepare(updateQuery).run(Number(row.QUANTIDADE) + Number(qtde), idPedido, idItem);    
+    } catch(error)
+    {
+      return({code: error["code"], message: error["message"]});
+    }
   }
 
   db.close();
@@ -371,14 +392,14 @@ module.exports = {
   authLogin: authLogin,
   getBairros: getBairros,
   getDadosPerfil: getDadosPerfil,
-  getEndereco: getEndereco,
-  getBairro: getBairro,
+  getAddressData: getAddressData,
+  getNeighborhoodData: getNeighborhoodData,
   getPizzas: getPizzas,
   getCombos: getCombos,
   getBebidas: getBebidas,
   getSaboresPizza: getSaboresPizza,
   getItemCardapioImage: getItemCardapioImage,
-  insertNewPizzaPersonalizada: insertNewPizzaPersonalizada,
+  getDoubleFlavorPizza: getDoubleFlavorPizza,
   registerItemOrder: registerItemOrder,
   getUserData: getUserData,
   getPedidosUsuario: getPedidosUsuario,
