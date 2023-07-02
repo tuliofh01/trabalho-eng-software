@@ -15,6 +15,10 @@ function populateDatabase()
   const dbPath = path.resolve(__dirname, "../assets/database.db");
   const db = new Database(dbPath);
 
+  db.prepare(`insert into BAIRRO (NOME) values ('Aeroporto'), ('Bispo de Maura'), ('Braúnas'), ('Campus UFMG'), ('Confisco'), ('Conjunto Celso Machado'), ('Conjunto Lagoa'), ('Conjunto São Francisco de Assis'), ('Engenho Nogueira'), ('Garoas'), ('Indaiá'), ('Itatiaia'), ('Jaraguá'), ('Jardim Atlântico'), ('Lagoa da Pampulha'), ('Nova Pampulha'), ('Novo Ouro Preto'), ('São Francisco'), ('São José'), ('Trevo'), ('Universitário'), ('Vila Aeroporto Jaraguá'), ('Vila Antena Montanhês'), ('Vila Engenho Nogueira'), ('Vila Jardim Alvorada'), ('Vila Jardim Montanhês'), ('Vila Jardim São José'), ('Vila Paquetá'), ('Vila Real I'), ('Vila Real II'), ('Vila Rica'), ('Vila Santa Rosa'), ('Vila Santo Antônio'), ('Vila Santo Antônio Barroquinha'), ('Vila São Francisco'), ('Vila Suzana I'), ('Vila Suzana II'), ('Xangri-lá'), ('Unidas'), ('Universo')`).run();
+
+  db.prepare(`insert into SABOR_PIZZA (DESCRICAO) values ('Cheddar'), ('Frango'), ('Milho'), ('Portuguesa'), ('Quatro Queijos'), ('Tomate Seco'), ('Pepperoni'), ('Calabresa'), ('Frango com Catupiry'), ('Carne seca')`).run();
+
   const querySabores = `SELECT * FROM SABOR_PIZZA`;
   const rowsSabores = db.prepare(querySabores).all();
   let counter = 1;

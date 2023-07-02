@@ -145,7 +145,7 @@ BEGIN
 	WHERE new.IDPEDIDO = PEDIDO.ID;
 END;
 
-CREATE TRIGGER IF NOT EXISTS valida_quantidade_itempedido
+CREATE TRIGGER IF NOT EXISTS valida_quantidade_itempedido_insert
 BEFORE INSERT ON ITEMPEDIDO
 BEGIN 
 	SELECT CASE
@@ -153,6 +153,16 @@ BEGIN
 			raise (ABORT, 'A quantidade do item n�o pode ser menor que 1!')
 		END;
 END;
+
+CREATE TRIGGER IF NOT EXISTS valida_quantidade_itempedido_update
+BEFORE UPDATE ON ITEMPEDIDO
+BEGIN 
+	SELECT CASE
+		WHEN new.QUANTIDADE == old.QUANTIDADE THEN 
+			raise (ABORT, 'A quantidade do item n�o pode ser menor que 1!')
+		END;
+END;
+
 
 
 
