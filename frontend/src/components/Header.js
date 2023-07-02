@@ -19,11 +19,10 @@ function Header() {
         <p className={styles.link} onClick={() => navigate("/carrinho")}>
           Carrinho
         </p>
-        <img
-          className={styles.profilePic}
-          src={profilePic}
-          onClick={() => navigate("/perfil")}
-        />
+        <div className={styles.profileButton} onClick={() => navigate("/perfil")}>
+          <img src={profilePic} className={styles.profilePic}></img>
+          <div className={styles.profileLink}>Olá, {JSON.parse(localStorage["userData"]).NOME}</div>
+        </div>
       </div>
     </header>
   );

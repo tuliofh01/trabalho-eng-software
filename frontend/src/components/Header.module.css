@@ -4,6 +4,7 @@
   top: 0;
   left: 0;
   right: 0;
+  justify-content: space-between;
   height: 120px; 
   background-color: #4E1008; 
   z-index: 1000; 
@@ -12,13 +13,11 @@
 .innerDiv{
   display: flex;
   flex-direction: row;
-  float: right;
   clear: right;
-  margin-left: auto;
 }
 
 .link{
-  padding: 5px;
+  padding: 10px;
   margin: auto 5px;
   font-family: Arial, Helvetica, sans-serif;
   color: #FCDBBD;
@@ -30,15 +29,26 @@
   text-decoration: underline;
 }
 
-.logo{
-  float: right;
-  clear: right;
+
+.profileButton{
+  display: flex;
+  justify-content: right;
+  margin-right: 30px;
 }
 
+.profileLink{
+  margin: auto auto;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #FCDBBD;
+  cursor: pointer;
+  text-align: right;
+}
+
+
 .profilePic{
+  padding: 0 8px;
   height: 50px;
   width: 50px;
   margin-top: 35px;
-  margin-right: 10px;
   cursor: pointer;
 }
