@@ -34,23 +34,26 @@ function ModalPizzaComum(props){
         cpf: userData.CPF
       });
     }
-
-    console.log(response);
+    
     idPedidoCarrinho = response.data.ID;
     
-    if (idPedidoCarrinho !== null)  {
-      await axios
+    if (idPedidoCarrinho)  {
+      const response = await axios
         .post("http://localhost:3333/registerItemOrder", {
           token: localStorage.getItem("token"),
           idItem: idItemCarrinho,
           idOrderCart: idPedidoCarrinho,
           qtde: quantidadeRef.current.value
         });
+
+        if (response.data.code === 'SQLITE_CONSTRAINT_TRIGGER')
+          alert(response.data.message);
+        else  
+          alert("Carrinho atualizado!");
+
     } else {
       alert("ERRO: Não foi possível adicionar ao carrinho!");
-    }
-
-    alert("Carrinho atualizado!");
+    }    
   }
 
   return (
@@ -58,7 +61,7 @@ function ModalPizzaComum(props){
       <div className="modalContent">
         <img className="image" src={props.image} />
         <p className="modalText">
-          {props.description} - {props.price}
+          {props.description} - R$ {props.price}
         </p>
         <input
           ref={quantidadeRef}

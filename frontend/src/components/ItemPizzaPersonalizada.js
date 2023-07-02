@@ -23,7 +23,6 @@ function ItemPizzaPersonalizada(props){
         <p className={styles.price}>R$ {props.price}</p>
         {isModalOpen && (
           <ModalPizzaPersonalizada
-            //key={props.key}
             image={pizzaPersonalizada}
             description={`Monte sua pizza de dois sabores!`}
             price={60}

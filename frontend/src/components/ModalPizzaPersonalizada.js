@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from "react";
 import "./ModalPizzaComum.css";
 
 function ModalPizzaPersonalizada(props) {
+
   const quantidadeRef = useRef();
 
   const sabor1Ref = useRef();
@@ -11,9 +12,6 @@ function ModalPizzaPersonalizada(props) {
   const [sabor1, setSabor1] = useState([]);
   const [sabor2, setSabor2] = useState([]);
 
-  let selectedSabor1;
-  let selectedSabor2;
-  
   const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
@@ -29,73 +27,66 @@ function ModalPizzaPersonalizada(props) {
   }
 
   async function shoppingCartHandler() {
+
     let idItemCarrinho;
-    console.log(props.price);
+    let idPedidoCarrinho;
 
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    
+     // Procura por pedido não concluido na tabela de pedidos para o usuário (equivalente ao carrinho)
 
+    let response = await axios
+      .post("http://localhost:3333/getCartOrder", {
+        cpf: userData.CPF
+      });
+
+    console.log(response.data);
+
+    if (response == null || response.data == null || response.data === "") {
+      response = await axios
+      .post("http://localhost:3333/createCartOrder", {
+        cpf: userData.CPF
+      });
+    }
+
+    idPedidoCarrinho = response.data.ID;
+
+    if (idPedidoCarrinho !== null)  {
     await axios
-      .post("/insertNewPizzaPersonalizada", {
+      .post("/getDoubleFlavorPizza", {
         descricao: props.description,
         sabor1Id: (sabor1Ref.current.selectedIndex+1),
         sabor2Id: (sabor2Ref.current.selectedIndex+1),
-        price: props.price
+        price: 60
       })
       .then((response) => {
-        idItemCarrinho = response.data;
-
-        const itemsArray = localStorage.getItem("ItensPedido");
-        const totalPrice = localStorage.getItem("TotalPedido");
-
-        // Sets purchased items by ID
-        if (itemsArray) {
-          localStorage.setItem(
-            "ItensPedido",
-            itemsArray +
-              ";" +
-              quantidadeRef.current.value +
-              "-" +
-              idItemCarrinho
-          );
-        } else {
-          localStorage.setItem(
-            "ItensPedido",
-            quantidadeRef.current.value + "-" + idItemCarrinho
-          );
-        }
-
-        // Sets total price
-        if (totalPrice) {
-          localStorage.setItem(
-            "TotalPedido",
-            String(
-              Number(totalPrice) +
-                Number(props.price) * Number(quantidadeRef.current.value)
-            )
-          );
-        } else {
-          localStorage.setItem(
-            "TotalPedido",
-            String(Number(props.price) * Number(quantidadeRef.current.value))
-          );
-        }
-
-        alert("Carrinho atualizado!");
+        if (response.data.code === 'SQLITE_CONSTRAINT_TRIGGER')
+          alert(response.data.message);
+        else
+          idItemCarrinho = response.data.ID;
       });
-  }
 
-  function changeOptionsSabor1(e) {
-    //console.log(e.target.value);
-    //console.log(e.target.selectedIndex);
-    //console.log(sabor1Ref.current);
-    //selectedSabor1 = e.target.value;
-    //delete sabor2[event.target.value];
-    //console.log(sabor2);
-  }
+      if (idItemCarrinho){
+        const response2 = await axios
+            .post("/registerItemOrder", {
+              token: localStorage.getItem("token"),
+              idItem: idItemCarrinho,
+              idOrderCart: idPedidoCarrinho,
+              qtde: quantidadeRef.current.value
+        });
 
-  function changeOptionsSabor2(event) {
-    //delete sabor1[event.target.value];
-  }
+        console.log(response2);
 
+        if (response2.data.code === 'SQLITE_CONSTRAINT_TRIGGER')
+          alert(response2.data.message);
+        else  
+          alert("Carrinho atualizado!");
+     }
+
+    } else {
+      alert("ERRO: Não foi possível adicionar ao carrinho!");
+    }
+  }
 
   return (
     <div className={`modalCard ${isOpen ? "open" : ""}`}>
@@ -122,7 +113,7 @@ function ModalPizzaPersonalizada(props) {
           ref={quantidadeRef}
           type="number"
           min="1"
-          defaultValue={0}
+          defaultValue={1}
           placeholder="Quantidade de itens"
         />
         <button className="modalClose" onClick={shoppingCartHandler}>
