@@ -56,7 +56,7 @@ function Index(){
             id={item.ID}
             image={item.IMAGEM_PATH}
             description={item.DESCRICAO}
-            price={item.VALOR}
+            price={item.VALOR.toFixed(2).replace('.', ',')}
             />
           ))}
         </ContainerCardapio>
@@ -68,7 +68,7 @@ function Index(){
             id={item.ID}
             image={item.IMAGEM_PATH}
             description={item.DESCRICAO}
-            price={item.VALOR}
+            price={item.VALOR.toFixed(2).replace('.', ',')}
             />
           ))}
         </ContainerCardapio>
@@ -78,7 +78,7 @@ function Index(){
           <ItemPizzaPersonalizada
             image={pizzaPersonalizada}
             description={`Monte sua pizza de dois sabores!`}
-            price={60}
+            price={Number(60).toFixed(2)}
           />
 
           {itensPizza.map((item) => (
@@ -86,7 +86,7 @@ function Index(){
             id={item.ID}
             image={item.IMAGEM_PATH}
             description={item.DESCRICAO}
-            price={item.VALOR}
+            price={item.VALOR.toFixed(2).replace('.', ',')}
             />
           ))}
         </ContainerCardapio>
@@ -98,7 +98,7 @@ function Index(){
             id={item.ID}
             image={item.IMAGEM_PATH}
             description={item.DESCRICAO}
-            price={item.VALOR}
+            price={item.VALOR.toFixed(2).replace('.', ',')}
             />
           ))}
 
