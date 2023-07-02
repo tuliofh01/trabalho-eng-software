@@ -3,7 +3,7 @@
 	NOME text
 );
 
-insert into BAIRRO (NOME) values ('Aeroporto'), ('Bispo de Maura'), ('Braï¿½nas'), ('Campus UFMG'), ('Confisco'), ('Conjunto Celso Machado'), ('Conjunto Lagoa'), ('Conjunto Sï¿½o Francisco de Assis'), ('Engenho Nogueira'), ('Garï¿½as'), ('Indaiï¿½'), ('Itatiaia'), ('Jaraguï¿½'), ('Jardim Atlï¿½ntico'), ('Lagoa da Pampulha'), ('Nova Pampulha'), ('Novo Ouro Preto'), ('Sï¿½o Francisco'), ('Sï¿½o Josï¿½'), ('Trevo'), ('Universitï¿½rio'), ('Vila Aeroporto Jaraguï¿½'), ('Vila Antena Montanhï¿½s'), ('Vila Engenho Nogueira'), ('Vila Jardim Alvorada'), ('Vila Jardim Montanhï¿½s'), ('Vila Jardim Sï¿½o Josï¿½'), ('Vila Paquetï¿½'), ('Vila Real I'), ('Vila Real II'), ('Vila Rica'), ('Vila Santa Rosa'), ('Vila Santo Antï¿½nio'), ('Vila Santo Antï¿½nio Barroquinha'), ('Vila Sï¿½o Francisco'), ('Vila Suzana I'), ('Vila Suzana II'), ('Xangri-lï¿½'), ('Unidas'), ('Universo');
+insert into BAIRRO (NOME) values ('Aeroporto'), ('Bispo de Maura'), ('BraÃºnas'), ('Campus UFMG'), ('Confisco'), ('Conjunto Celso Machado'), ('Conjunto Lagoa'), ('Conjunto Sï¿½o Francisco de Assis'), ('Engenho Nogueira'), ('Garï¿½as'), ('Indaiï¿½'), ('Itatiaia'), ('Jaraguï¿½'), ('Jardim Atlï¿½ntico'), ('Lagoa da Pampulha'), ('Nova Pampulha'), ('Novo Ouro Preto'), ('Sï¿½o Francisco'), ('Sï¿½o Josï¿½'), ('Trevo'), ('Universitï¿½rio'), ('Vila Aeroporto Jaraguï¿½'), ('Vila Antena Montanhï¿½s'), ('Vila Engenho Nogueira'), ('Vila Jardim Alvorada'), ('Vila Jardim Montanhï¿½s'), ('Vila Jardim Sï¿½o Josï¿½'), ('Vila Paquetï¿½'), ('Vila Real I'), ('Vila Real II'), ('Vila Rica'), ('Vila Santa Rosa'), ('Vila Santo Antï¿½nio'), ('Vila Santo Antï¿½nio Barroquinha'), ('Vila Sï¿½o Francisco'), ('Vila Suzana I'), ('Vila Suzana II'), ('Xangri-lï¿½'), ('Unidas'), ('Universo');
 
 create table ENDERECO (
 	ID integer primary key autoincrement,
@@ -100,11 +100,11 @@ BEGIN
 		WHEN length(new.SENHA) < 8 THEN 
 			raise (ABORT, 'Senha precisa ser igual ou maior que 8 caracteres!')
 		WHEN length(new.EMAIL) = 0 THEN
-			raise (ABORT, 'O campo "E-mail" é obrigatório!')
+			raise (ABORT, 'O campo "E-mail" ï¿½ obrigatï¿½rio!')
 		WHEN length(new.SENHA) = 0 THEN
-			raise (ABORT, 'O campo "Senha" é obrigatório!')
+			raise (ABORT, 'O campo "Senha" ï¿½ obrigatï¿½rio!')
 		WHEN length(new.CPF) = 0 THEN
-			raise (ABORT, 'O campo "CPF" é obrigatório!')
+			raise (ABORT, 'O campo "CPF" ï¿½ obrigatï¿½rio!')
 	END;
 END;
 
@@ -122,7 +122,7 @@ BEFORE INSERT ON ITEMCARDAPIO
 BEGIN 
 	SELECT CASE
 		WHEN new.IDSABOR1 = new.IDSABOR2 THEN 
-			raise (ABORT, 'Os dois sabores da pizza não podem ser iguais!')
+			raise (ABORT, 'Os dois sabores da pizza nï¿½o podem ser iguais!')
 		END;
 END;
 
@@ -150,7 +150,7 @@ BEFORE INSERT ON ITEMPEDIDO
 BEGIN 
 	SELECT CASE
 		WHEN new.QUANTIDADE < 1 THEN 
-			raise (ABORT, 'A quantidade do item não pode ser menor que 1!')
+			raise (ABORT, 'A quantidade do item nï¿½o pode ser menor que 1!')
 		END;
 END;
 
