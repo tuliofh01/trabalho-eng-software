@@ -8,7 +8,7 @@ function Perfil() {
   const [dadosPerfil, setDadosPerfil] = useState([]);
   const [dadosEndereco, setDadosEndereco] = useState([]);
   const [dadosBairro, setDadosBairro] = useState([]);
-  const [dadosEnderecoRaw, setDadosEnderecoRaw] = useState([]);
+  const [IDENDERECO, setIDENDERECO] = useState();
   const [status, setStatus] = useState(false);
   const [loading, setLoading] = useState(true);
   const [bairros, setBairros] = useState([]);
@@ -22,22 +22,23 @@ function Perfil() {
     (async () => {
       try {
         const response = await axios.post(
-          "http://localhost:3333/getProfileData",
+          "/getProfileData",
           {
             token: localStorage.getItem("token"),
           }
         );
 
         const addressResponse = await axios.post(
-          "http://localhost:3333/getAddressData",
+          "/getAddressData",
           {
             id: response.data[0].IDENDERECO,
           }
         );
-        setDadosEnderecoRaw(addressResponse.data);
+        setIDENDERECO(response.data.IDENDERECO);
+        console.log(IDENDERECO);
 
-        const neighbourhoodResponse = await axios.post(
-          "http://localhost:3333/getNeighborhoodData",
+        const neighborhoodResponse = await axios.post(
+          "/getNeighborhoodData",
           {
             id: addressResponse.data.IDBAIRRO,
           }
@@ -49,12 +50,13 @@ function Perfil() {
 
         arrayPerfil.push(response.data[0]);
         arrayEndereco.push(addressResponse.data);
-        arrayBairro.push(neighbourhoodResponse.data);
+        arrayBairro.push(neighborhoodResponse.data);
 
         setStatus(true);
         setDadosPerfil(arrayPerfil);
         setDadosEndereco(arrayEndereco);
         setDadosBairro(arrayBairro);
+
       } catch (error) {
         console.error(error);
       } finally {
@@ -66,7 +68,7 @@ function Perfil() {
   useEffect(() => {
     // Fetch neighborhoods data
     axios
-      .get("http://localhost:3333/getNeighborhoods")
+      .get("/getNeighborhoods")
       .then((response) => {
         setBairros(response.data);
       })
@@ -109,6 +111,8 @@ function Perfil() {
       numero: numeroRef.current.value
     };
 
+    console.log(formData)
+
     try {
       await axios.post("/setUserData", {
         data: formData,
@@ -131,7 +135,7 @@ function Perfil() {
       ) : (
         <div className={styles.container}>
           <Header />
-          <form className={styles.dataContainer} onSubmit={formHandler}>
+          <form className={styles.dataContainer}>
             <h2>Dados Pessoais</h2>
             <div className={styles.inputGroup}>
               <label htmlFor="cpf">CPF</label>
@@ -165,7 +169,7 @@ function Perfil() {
               <input
                 type="text"
                 id="email"
-                defaultValue={status ? dadosPerfil[0].EMAIL : ""}
+                value={status ? dadosPerfil[0].EMAIL : ""}
                 ref={emailRef}
               />
             </div>
@@ -184,7 +188,7 @@ function Perfil() {
               <select
                 className={styles.inputField}
                 placeholder="Bairro"
-                defaultValue={status ? dadosBairro[0].NOME : ""}
+                defaultValue={status ? dadosBairro[0].NOMEBAIRRO : ""}
                 ref={bairroRef}
               >
                 {bairros.map((nome) => (
@@ -212,7 +216,7 @@ function Perfil() {
                 ref={numeroRef}
               />
             </div>
-            <button type="submit">Confirmar dados</button>
+            <button type="submit" onClick={formHandler}>Confirmar dados</button>
           </form>
         </div>
       )}
