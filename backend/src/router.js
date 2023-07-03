@@ -106,6 +106,7 @@ router.post("/getProfileData", verifyToken, (req, res) => {
 
 router.post("/getAddressData", (req, res) => {
   const dados = appModel.getAddressData(req.body.id);
+  console.log(dados);
   res.status(200).json(dados);
 })
 
@@ -207,6 +208,7 @@ router.post("/deleteOrder", function (req, res)
 {
   const result = appModel.deleteOrder(req.body.id);
   res.status(200).send(pedido);
+  res.status(200).send(`${appModel.getNeighborhoodId(req.body.nomeBairro)}`);
 })
 
 module.exports = router;

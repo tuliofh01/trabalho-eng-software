@@ -89,7 +89,7 @@ function getNeighborhoodData(id) {
 
 function getAddressData(id){
   const db = new Database(dbPath);
-  const query = `SELECT E.LOGRADOURO, E.NUMERO, B.NOME AS NOMEBAIRRO, E.CEP FROM ENDERECO E
+  const query = `SELECT E.LOGRADOURO, E.IDBAIRRO, E.ID, E.NUMERO, B.NOME AS NOMEBAIRRO, E.CEP FROM ENDERECO E
                  JOIN BAIRRO B ON E.IDBAIRRO = B.ID 
                  WHERE E.ID = '${id}'`;
   const row = db.prepare(query).get();
@@ -378,18 +378,31 @@ function setUserData(data){
   db.close();
 }
 
-function setAddressData(data){
+function setAddressData(data) {
   const db = new Database(dbPath);
-  // Prepare the INSERT statement
-  const insertStmt = db.prepare(
-    "UPDATE ENDERECO SET CEP = ?, IDBAIRRO = ?, LOGRADOURO = ?, NUMERO = ? WHERE ID = ?"
-  );
-  // Execute the INSERT statement
-  const result = insertStmt.run(data.cep, data.idBairro, data.logradouro, data.numero, data.idEndereco);
+  
+  console.log(data)
+  const query = `UPDATE ENDERECO SET CEP = '${data.cep}', IDBAIRRO = ${data.idBairro}, LOGRADOURO = '${data.logradouro}', NUMERO = ${data.numero} WHERE ID = ${data.idEndereco}`;
+  console.log(query)
 
-  // Close the database connection
-  db.close();
+  try {
+    const insertStmt = db.prepare(
+      `UPDATE ENDERECO SET CEP = '${data.cep}', IDBAIRRO = ${data.idBairro}, LOGRADOURO = '${data.logradouro}', NUMERO = ${data.numero} WHERE ID = ${data.idEndereco}`
+    );
+
+    console.log(insertStmt)
+
+    const result = insertStmt.run(
+    );
+
+    console.log(result);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    db.close();
+  }
 }
+
 
 function getNeighborhoodId(nome){
   const db = new Database(dbPath);
