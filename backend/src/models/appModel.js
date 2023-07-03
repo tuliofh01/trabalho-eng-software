@@ -376,10 +376,10 @@ function setAddressData(data){
   const db = new Database(dbPath);
   // Prepare the INSERT statement
   const insertStmt = db.prepare(
-    "UPDATE ENDERECO SET CEP = ?, IDBAIRRO = ?, LOGRADOURO = ? WHERE ID = ?"
+    "UPDATE ENDERECO SET CEP = ?, IDBAIRRO = ?, LOGRADOURO = ?, NUMERO = ? WHERE ID = ?"
   );
   // Execute the INSERT statement
-  const result = insertStmt.run(data.cep, data.idBairro, data.logradouro, data.idEndereco);
+  const result = insertStmt.run(data.cep, data.idBairro, data.logradouro, data.numero, data.idEndereco);
 
   // Close the database connection
   db.close();

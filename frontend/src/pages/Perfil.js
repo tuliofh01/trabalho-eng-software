@@ -82,6 +82,7 @@ function Perfil() {
   const logradouroRef = useRef(null);
   const bairroRef = useRef(null);
   const cepRef = useRef(null);
+  const numeroRef = useRef(null);
 
   const formHandler = async (event) => {
     event.preventDefault();
@@ -105,6 +106,7 @@ function Perfil() {
       logradouro: logradouroRef.current.value,
       idBairro: idBairro,
       cep: cepRef.current.value,
+      numero: numeroRef.current.value
     };
 
     try {
@@ -199,6 +201,15 @@ function Perfil() {
                 id="cep"
                 defaultValue={status ? dadosEndereco[0].CEP : ""}
                 ref={cepRef}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <label htmlFor="cep">NUMERO</label>
+              <input
+                type="number"
+                id="numero"
+                defaultValue={status ? dadosEndereco[0].NUMERO : ""}
+                ref={numeroRef}
               />
             </div>
             <button type="submit">Confirmar dados</button>
