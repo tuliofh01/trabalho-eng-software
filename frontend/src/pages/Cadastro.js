@@ -16,6 +16,7 @@ function Cadastro(){
     const logradouroRef = useRef();
     const bairroRef = useRef();
     const cepRef = useRef();
+    const numeroRef = useRef();
 
     // Dados usuário
     const nomeRef = useRef();
@@ -44,6 +45,7 @@ function Cadastro(){
           logradouro: logradouroRef.current.value,
           bairro: bairroRef.current.value,
           cep: cepRef.current.value,
+          numero: numeroRef.current.value
         })
         .then(async (response) => {
           await axios
@@ -100,18 +102,30 @@ function Cadastro(){
               placeholder="CPF"
             />
           </div>
-          <input
-            ref={logradouroRef}
-            className={styles.inputField}
-            placeholder="Logradouro"
-          />
+          <div className={styles.innerDiv}>
+            <input
+              ref={logradouroRef}
+              className={styles.inputField}
+              placeholder="Logradouro"
+            />
+            <input
+              ref={numeroRef}
+              className={styles.inputField}
+              placeholder="Numero"
+              type="number"
+            />
+          </div>
           <div className={styles.innerDiv}>
             <input
               ref={cepRef}
               className={styles.inputField}
               placeholder="CEP"
             />
-            <select className={styles.inputField} placeholder='Bairro' ref={bairroRef}>
+            <select
+              className={styles.inputField}
+              placeholder="Bairro"
+              ref={bairroRef}
+            >
               {bairros.map((nome) => (
                 <option key={nome} value={nome}>
                   {nome}

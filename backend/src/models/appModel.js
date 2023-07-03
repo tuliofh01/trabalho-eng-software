@@ -42,9 +42,9 @@ function criarEndereco(addressData) {
 
   // Insert address
   const insertQuery =
-    "INSERT INTO ENDERECO (LOGRADOURO, IDBAIRRO, CEP) VALUES (?, ?, ?)";
+    "INSERT INTO ENDERECO (LOGRADOURO, IDBAIRRO, CEP, NUMERO) VALUES (?, ?, ?, ?)";
   const stmt = db.prepare(insertQuery);
-  const result = stmt.run(addressData.logradouro, idBairro, addressData.cep);
+  const result = stmt.run(addressData.logradouro, idBairro, addressData.cep, addressData.numero);
   if (result.changes > 0) {
     console.log(`New ADDRESS inserted: ${addressData.logradouro}`);
   }

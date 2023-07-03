@@ -58,7 +58,8 @@ router.post("/createAddress", async (req, res) => {
   const data = {
     logradouro: req.body.logradouro,
     bairro: req.body.bairro,
-    cep: req.body.cep
+    cep: req.body.cep,
+    numero:req.body.numero
   };
   const addressId = appModel.criarEndereco(data);
   res.status(200).send(addressId);
