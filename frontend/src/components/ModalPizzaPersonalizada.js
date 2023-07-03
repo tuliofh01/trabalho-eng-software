@@ -95,14 +95,14 @@ function ModalPizzaPersonalizada(props) {
         <p className="modalText">
           {props.description} - R$ {props.price}
         </p>
-        <select placeholder='Sabor 1' ref={sabor1Ref} onChange={changeOptionsSabor1}>
+        <select placeholder='Sabor 1' ref={sabor1Ref}>
         {sabor1.map((item) => (
          <option key={item.ID} value={item.DESCRICAO}>
          {item.DESCRICAO}
             </option>
           ))}
         </select>
-        <select placeholder='Sabor 2' ref={sabor2Ref} onChange={changeOptionsSabor2}>
+        <select placeholder='Sabor 2' ref={sabor2Ref}>
           {sabor2.map((item) => (
             <option key={item.ID} value={item.DESCRICAO}>
               {item.DESCRICAO}
