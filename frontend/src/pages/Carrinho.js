@@ -42,23 +42,11 @@ function Carrinho() {
             id: orderDataResponse.data.ID
         });
 
+      console.log(orderItemsResponse.data);
+
       if (orderItemsResponse.data.length > 0)
       {
-        let items = new Array(0);
-
-        for (let itemPedido in orderItemsResponse.data) {
-          const itemResponse = await axios.post("http://localhost:3333/getMenuItem",
-          {
-            id: orderItemsResponse.data[itemPedido].IDITEM
-          })
-
-          const item = itemResponse.data;
-          item.QUANTIDADE = orderItemsResponse.data[itemPedido].QUANTIDADE;
-
-          items.push(itemResponse.data);
-        }
-
-        setItensCarrinho(items);
+        setItensCarrinho(orderItemsResponse.data);
 
         return (orderDataResponse.data);
       }    

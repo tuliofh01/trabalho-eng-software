@@ -232,6 +232,18 @@ function registerItemOrder(idPedido, idItem, qtde){
   return result;
 }
 
+function getOrder(idPedido)
+{
+  const db = new Database(dbPath);
+
+  const row = db.prepare(
+      `SELECT * FROM PEDIDO WHERE ID = '${idPedido}'`
+    ).get();
+
+  db.close();
+  return row;
+}
+
 function getPedidosUsuario(cpf)
 {
   const db = new Database(dbPath);
@@ -249,20 +261,14 @@ function getOrderItems(idPedido)
   const db = new Database(dbPath);
 
   const rows = db.prepare(
-      `SELECT * FROM ITEMPEDIDO WHERE IDPEDIDO = '${idPedido}'`
+      `SELECT * FROM ITEMPEDIDO IP 
+       JOIN ITEMCARDAPIO IC ON IC.ID = IP.IDITEM
+       WHERE IDPEDIDO = '${idPedido}'`
     ).all();
 
   db.close();
   return rows;
 }
-
-/*function getCartOrderItems(cpf)
-{
-  const order = getOrderCart(cpf);
-  const rows = getOrderItems(order.ID);
-
-  return rows;
-}*/
 
 function setPedido(data){
   const db = new Database(dbPath);
@@ -393,6 +399,18 @@ function getNeighborhoodId(nome){
   return row["ID"];
 }
 
+function deleteOrder(idPedido)
+{
+  const db = new Database(dbPath);
+
+  const row = db.prepare(
+      `delete from PEDIDO where ID = '${idPedido}'`
+    ).get();
+
+  db.close();
+  return row;
+}
+
 
 module.exports = {
   createAccount: createAccount,
@@ -411,6 +429,7 @@ module.exports = {
   registerItemOrder: registerItemOrder,
   getUserData: getUserData,
   getPedidosUsuario: getPedidosUsuario,
+  getOrder: getOrder,
   setPedido: setPedido,
   getItensMaisPedidos: getItensMaisPedidos,
   createCartOrder: createCartOrder,
@@ -421,5 +440,6 @@ module.exports = {
   getMenuItem: getMenuItem,
   setUserData: setUserData,
   setAddressData: setAddressData,
-  getNeighborhoodId: getNeighborhoodId
+  getNeighborhoodId: getNeighborhoodId,
+  deleteOrder: deleteOrder
 }

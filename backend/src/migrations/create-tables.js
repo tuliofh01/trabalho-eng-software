@@ -82,8 +82,8 @@ create table ITEMPEDIDO (
 	
 	foreign key (IDPEDIDO)
 	references PEDIDO (ID)
-		ON DELETE NO ACTION
-		ON UPDATE NO ACTION,
+		ON DELETE CASCADE
+		ON UPDATE CASCADE,
 		
 	foreign key (IDITEM)
 	references ITEMCARDAPIO(ID)

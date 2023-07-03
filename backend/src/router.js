@@ -194,8 +194,19 @@ router.post("/setAddressData", function (req, res) {
 });
 
 router.post("/getNeighborhoodId", function (req, res){
-  appModel.getNeighborhoodId(req.body.nomeBairro)
-  
+  appModel.getNeighborhoodId(req.body.nomeBairro);
+  //TA FALTANDO ALGUMA COISA AQUI
+});
+
+router.post("/getOrder", function (req, res){
+  const pedido = appModel.getOrder(req.body.id);
+  res.status(200).send(pedido);
+})
+
+router.post("/deleteOrder", function (req, res)
+{
+  const result = appModel.deleteOrder(req.body.id);
+  res.status(200).send(pedido);
 })
 
 module.exports = router;
